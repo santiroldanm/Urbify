@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Urbify | Sistema de Gestión Residencial</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/x-icon" />
+</head>
+<body class="min-h-screen bg-[url(/img/fondo4.jpg)] bg-cover bg-no-repeat bg-center bg-fixed flex items-center justify-center p-6">
+
+<div class="w-full max-w-md bg-white bg-opacity-90 rounded-3xl shadow-xl backdrop-blur-md p-10 border-4 border-[#138fcb]">
+    <div class="flex items-center justify-center mb-8 space-x-30">
+        <a th:href="@{/}" class="py-2 px-5 transition duration-200 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 bg-[#138fcb] text-white rounded-lg font-semibold text-center">
+                <i class="text-lg hgi hgi-stroke hgi-arrow-left-02"></i>
+                <span class="text-lg"> Volver</span>
+            </a>
+        <img class="h-16 w-auto" th:src="@{/img/logo.png}" alt="Logo Urbify" />
+    </div>
+
+    <h1 class="text-3xl font-extrabold text-[#138fcb] mb-8 text-center tracking-tight">
+        <i class="text-5xl hgi hgi-stroke inline-block mr-2"></i>INGRESAR
+    </h1>
+
+    <form th:action="@{/login}" method="post" class="space-y-6">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+        <div>
+            <label for="username" class="block text-sm font-semibold text-gray-700 mb-2">E-mail</label>
+            <input
+                id="username"
+                type="email"
+                name="username"
+                placeholder="Email"
+                required
+                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+            />
+        </div>
+
+        <div>
+            <label for="password" class="block text-sm font-semibold text-gray-700 mb-2">Contraseña</label>
+            <input
+                id="password"
+                type="password"
+                name="password"
+                placeholder="********"
+                required
+                class="w-full rounded-xl border border-gray-300 px-4 py-3 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+            />
+        </div>
+
+        <button
+            type="submit"
+            class="w-full py-3 bg-[#138fcb] hover:bg-blue-600 rounded-xl text-white font-bold text-lg shadow-lg transition duration-300"
+        >
+            Entrar
+        </button>
+
+        <div class="text-center">
+            <p th:if="${param.error}" class="text-red-600 font-medium text-sm mt-2">
+                Usuario o contraseña incorrectos.
+            </p>
+            <p th:if="${param.logout}" class="text-green-600 font-medium text-sm mt-2">
+                Has cerrado sesión correctamente.
+            </p>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

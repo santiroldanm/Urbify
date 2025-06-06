@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Urbify | Correspondencias</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+    <link rel="shortcut icon" href="/img/logo.png" type="image/x-icon" />
+</head>
+
+<body>
+    <main class="ml-64 p-8 bg-[url('/img/fondo4.jpg')] bg-cover bg-no-repeat bg-center bg-fixed min-h-screen">
+        <aside class="fixed top-0 left-0 w-64 h-screen bg-[#138fcb] text-white flex flex-col justify-between shadow-lg overflow-y-auto z-50">
+            <div>
+                <div class="p-6 flex flex-col items-center text-center">
+                    <img class="w-24 h-24 rounded-full border-4 border-white bg-white" th:src="@{/img/vigilante.png}"
+                        alt="Imagen de Perfil Vigilante" />
+                    <h2 class="mt-4 text-xl font-bold" th:text="${vigilant?.firstName != null && vigilant?.lastName != null ? vigilant.firstName + ' ' + vigilant.lastName : 'Nombre Vigilante'}">
+                        Nombre Vigilante
+                    </h2>
+                    <p class="text-sm text-white/80" th:text="${vigilant?.email ?: 'vigilant@email.com'}">
+                        vigilant@email.com
+                    </p>
+                </div>
+                <nav class="px-6 flex flex-col gap-2 text-md">
+                    <a th:href="@{/vigilant/action}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-home-06 text-white"></i>
+                        <span class="text-white font-semibold">Inicio</span>
+                    </a>
+                    <a th:href="@{/vigilant/visitante}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-user-circle text-white"></i>
+                        <span class="text-white font-semibold">Persona</span>
+                    </a>
+                    <a th:href="@{/vigilant/vehicles}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-car-02 text-white"></i>
+                        <span class="text-white font-semibold">Vehiculo</span>
+                    </a>
+                    <a th:href="@{/vigilant/parqueadero}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-car-parking-02 text-white"></i>
+                        <span class="text-white font-semibold">Parqueadero</span>
+                    </a>
+                    <a th:href="@{/vigilant/reservas}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-calendar-03 text-white"></i>
+                        <span class="text-white font-semibold">Reservas</span>
+                    </a>
+                    <a th:href="@{/vigilant/reporte-visitantes}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-complaint text-white"></i>
+                        <span class="text-white font-semibold">Reportes</span>
+                    </a>
+                    <a th:href="@{/Correspondencias/list}"
+                        class="flex items-center gap-3 p-3 rounded-lg bg-white/10 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-package-delivered text-white"></i>
+                        <span class="text-white font-semibold">Correspondencias</span>
+                    </a>
+                </nav>
+            </div>
+
+            <div class="px-6 py-4">
+                <form th:action="@{/logout}" method="post" class="w-full">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit"
+                        class="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-2 rounded w-full text-center">
+                        <i class="hgi hgi-stroke hgi-logout-05"></i> Cerrar Sesión
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <div class="flex flex-col items-center text-center w-full">
+            <div class="flex justify-between items-center w-full max-w-6xl mb-8">
+                <a th:href="@{/vigilant/action}"
+                    class="inline-flex items-center px-4 py-2 bg-[#138fcb] hover:bg-blue-700 text-white rounded-lg transition duration-300 shadow-md">
+                    <i class="hgi hgi-stroke hgi-arrow-left-02 mr-2"></i> Volver
+                </a>
+                <img class="h-20" src="/img/logo.png" alt="Logo Urbify" />
+            </div>
+
+            <h1 class="text-3xl font-bold mb-6 text-center text-[#138fcb]">GESTIÓN DE CORRESPONDENCIAS</h1>
+
+            <div th:if="${successMessage}" class="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded text-center">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}" class="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded text-center">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-6 w-full max-w-6xl">
+                <div class="md:w-1/2 bg-white shadow-md rounded-lg p-6 border-4 border-[#138fcb]">
+                    <h2 class="text-xl font-semibold mb-4 text-[#138fcb]">Registrar Nueva Correspondencia</h2>
+                    <form th:action="@{/Correspondencias/save}" method="post" class="grid grid-cols-1 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Apartamento</label>
+                            <input type="number" name="apartamentoId" list="apartamentos-list" placeholder="Número de Apartamento"
+                                class="mt-1 block w-full border border-[#138fcb] rounded-md p-2" required />
+                            <datalist id="apartamentos-list">
+                                <option th:each="apt : ${apartamentos}" th:value="${apt.id}"
+                                    th:text="'Apto ' + ${apt.apartamento} + ', Torre ' + ${apt.torre} + ', Piso ' + ${apt.piso}"></option>
+                            </datalist>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Tipo de Correspondencia</label>
+                            <select name="tipo" class="mt-1 block w-full border border-[#138fcb] rounded-md p-2" required>
+                                <option value="Encomienda">Encomienda</option>
+                                <option value="Otro">Otro</option>
+                                <option value="Recibo">Recibo</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Descripción / No. de Guía</label>
+                            <input type="text" name="descripcion" maxlength="50"
+                                class="mt-1 block w-full border border-[#138fcb] rounded-md p-2" required />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Estado (Pendiente de Entrega)</label>
+                            <select name="activo" class="mt-1 block w-full border border-[#138fcb] rounded-md p-2" required>
+                                <option value="true">Activo (Pendiente)</option>
+                                <option value="false">Entregado</option>
+                            </select>
+                        </div>
+
+                        <div class="col-span-1 text-center pt-4">
+                            <button type="submit"
+                                class="bg-[#138fcb] text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Guardar
+                                Correspondencia</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="md:w-1/2 bg-white shadow-md rounded-lg p-6 overflow-x-auto overflow-y-auto border-4 border-[#138fcb]">
+                    <h2 class="text-xl font-semibold mb-4 text-[#138fcb]">Listado de Correspondencias</h2>
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">ID</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Apartamento</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Tipo</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Descripción</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Fecha Reg.</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Estado</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-gray-500">Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200" th:if="${#lists.isEmpty(correspondencias)} == false">
+                            <tr th:each="correspondencia : ${correspondencias}">
+                                <td class="px-4 py-2" th:text="${correspondencia.id}"></td>
+                                <td class="px-4 py-2" th:text="${correspondencia.apartamento?.apartamento != null ? 'Apto ' + correspondencia.apartamento.apartamento + ' T' + correspondencia.apartamento.torre : 'N/A'}"></td>
+                                <td class="px-4 py-2" th:text="${correspondencia.tipo}"></td>
+                                <td class="px-4 py-2" th:text="${correspondencia.correspondencia}"></td>
+                                <td class="px-4 py-2" th:text="${#dates.format(correspondencia.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                                <td class="px-4 py-2">
+                                    <span th:text="${correspondencia.active == true ? 'Pendiente' : 'Entregado'}"
+                                          th:classappend="${correspondencia.active == true ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'}"
+                                          class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                                    </span>
+                                </td>
+                                <td class="px-4 py-2">
+                                    <form th:action="@{/Correspondencias/markDelivered}" method="post" th:if="${correspondencia.active == true}">
+                                        <input type="hidden" name="id" th:value="${correspondencia.id}" />
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                        <button type="submit" class="text-green-600 hover:text-green-900 text-sm">
+                                            Marcar Entregado
+                                        </button>
+                                    </form>
+                                    <span th:if="${correspondencia.active == false}" class="text-gray-500 text-sm">Entregado</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                        <tbody th:if="${#lists.isEmpty(correspondencias)}">
+                            <tr>
+                                <td colspan="7" class="px-4 py-2 text-center text-gray-500">No hay correspondencias registradas.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+</body>
+
+</html>

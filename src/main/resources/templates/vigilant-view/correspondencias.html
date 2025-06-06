@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urbify | Correspondencias</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/x-icon" />
+</head>
+
+<body>
+    <main class="ml-64 p-8 bg-[url('/img/fondo4.jpg')] bg-cover bg-no-repeat bg-center bg-fixed min-h-screen">
+        <!-- Sidebar fijo -->
+        <aside
+            class="fixed top-0 left-0 w-64 h-screen bg-[#138fcb] text-white flex flex-col justify-between shadow-lg overflow-y-auto z-50">
+            <div>
+                <div class="p-6 flex flex-col items-center text-center">
+                    <img class="w-24 h-24 rounded-full border-4 border-white bg-white" th:src="@{/img/vigilante.png}"
+                        alt="Imagen de Perfil Vigilante" />
+                    <h2 class="mt-4 text-xl font-bold" th:text="${vigilant.firstName + ' ' + vigilant.lastName}">Nombre
+                        Vigilante</h2>
+                    <p class="text-sm text-white/80" th:text="${vigilant.email}">vigilant@email.com</p>
+                </div>
+                <nav class="px-6 flex flex-col gap-2 text-md">
+                    <a th:href="@{/vigilant/action}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-home-06 text-white"></i>
+                        <span class="text-white font-semibold">Inicio</span>
+                    </a>
+                    <a th:href="@{/vigilant/visitante}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-user-circle text-white"></i>
+                        <span class="text-white font-semibold">Persona</span>
+                    </a>
+                    <a th:href="@{/vigilant/vehicles}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-car-02 text-white"></i>
+                        <span class="text-white font-semibold">Vehiculo</span>
+                    </a>
+                    <a th:href="@{/vigilant/parqueadero}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-car-parking-02 text-white"></i>
+                        <span class="text-white font-semibold">Parqueadero</span>
+                    </a>
+                    <a th:href="@{/vigilant/reservas}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-calendar-03 text-white"></i>
+                        <span class="text-white font-semibold">Reservas</span>
+                    </a>
+                    <a th:href="@{/vigilant/reporte-visitantes}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-complaint text-white"></i>
+                        <span class="text-white font-semibold">Reportes</span>
+                    </a>
+                    <a th:href="@{/Correspondencias/list}"
+                        class="flex items-center gap-3 p-3 rounded-lg bg-white/10 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-package-delivered text-white"></i>
+                        <span class="text-white font-semibold">Correspondencias</span>
+                    </a>
+                </nav>
+            </div>
+
+            <div class="px-6 py-4">
+                <form th:action="@{/logout}" method="post" class="w-full">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit"
+                        class="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-2 rounded w-full text-center">
+                        <i class="hgi hgi-stroke hgi-logout-05"></i> Cerrar Sesión
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <div class="flex flex-col items-center text-center w-full">
+            <div class="flex justify-between items-center w-full max-w-6xl mb-8">
+                <a th:href="@{/vigilant/action}"
+                    class="inline-flex items-center px-4 py-2 bg-[#138fcb] hover:bg-blue-700 text-white rounded-lg transition duration-300 shadow-md">
+                    <i class="hgi hgi-stroke hgi-arrow-left-02 mr-2"></i> Volver
+                </a>
+                <img class="h-20" src="/img/logo.png" alt="Logo Urbify" />
+            </div>
+
+            <h1 class="text-3xl font-bold mb-6 text-center text-[#138fcb]">CORRESPONDENCIAS</h1>
+
+            <form th:action="@{/Correspondencias/list}" method="get"
+                class="mb-8 flex flex-col md:flex-row items-center justify-between gap-4 w-full max-w-6xl">
+                <div class="flex gap-4 w-full md:w-auto">
+                    <select name="torre" class="px-4 py-2 rounded-xl border border-[#138fcb] w-full">
+                        <option value="">Todos los Bloques</option>
+                        <option value="1">Torre 1</option>
+                        <option value="2">Torre 2</option>
+                        <option value="3">Torre 3</option>
+                    </select>
+                    <select name="piso" class="px-4 py-2 rounded-xl border border-[#138fcb] w-full">
+                        <option value="">Todos los Pisos</option>
+                        <option th:each="i : ${#numbers.sequence(1, 21)}" th:value="${i}" th:text="'Piso ' + ${i}">
+                        </option>
+                    </select>
+                </div>
+                <input type="text" name="search" placeholder="Buscar por nombre o apartamento"
+                    class="px-4 py-2 rounded-xl border border-[#138fcb] w-full md:w-1/3" />
+                <button type="submit"
+                    class="inline-block px-6 py-2 bg-[#138fcb] text-white font-semibold rounded-xl shadow hover:bg-blue-700 transition">
+                    <i class="hgi hgi-stroke hgi-search-01 text-sm"></i>
+                </button>
+            </form>
+
+            <div th:if="${successMessage}"
+                class="fixed top-4 right-4 p-4 bg-green-500 text-white rounded-lg shadow-lg z-50">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage}"
+                class="fixed top-4 right-4 p-4 bg-red-500 text-white rounded-lg shadow-lg z-50">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <div class="space-y-6 w-full max-w-6xl text-left">
+                <div th:each="apt : ${apartamentosPage}"
+                    class="bg-white border-l-4 border-[#138fcb] rounded-xl shadow-sm flex-grow">
+                    <div class="flex justify-between items-center px-6 py-4 bg-[#f0f9ff] rounded-t-xl">
+                        <div>
+                            <h2 class="text-lg font-bold text-[#138fcb]">
+                                Apto <span th:text="${apt?.apartamento ?: '-'}"></span> - Torre <span
+                                    th:text="${apt?.torre ?: '-'}"></span> / Piso <span
+                                    th:text="${apt?.piso ?: '-'}"></span>
+                            </h2>
+                            <p class="text-sm text-gray-600">
+                                Propietario:
+                                <span
+                                    th:text="${apt?.propietario?.firstName != null && apt?.propietario?.lastName != null ? apt.propietario.firstName + ' ' + apt.propietario.lastName : 'Nombre'}">Nombre</span>
+                            </p>
+                        </div>
+                        <span th:text="${apt?.active == true ? 'Activo' : 'Inactivo'}"
+                            th:classappend="${apt?.active == true ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}"
+                            class="px-3 py-1 rounded-full text-sm font-medium"></span>
+                    </div>
+
+                    <div class="px-6 py-4 grid md:grid-cols-2 gap-6 text-sm text-gray-700 bg-white">
+                        <div>
+                            <h3 class="font-semibold text-[#138fcb] mb-2">📘 Información General</h3>
+                            <p><strong>Teléfono:</strong> <span th:text="${apt?.propietario?.telephone ?: '-'}">-</span>
+                            </p>
+                            <p><strong>N° de residentes:</strong> <span
+                                    th:text="${apt?.residentes != null ? #lists.size(apt.residentes) : 0}">0</span></p>
+                        </div>
+
+                        <div>
+                            <h3 class="font-semibold text-[#138fcb] mb-2">📦 Paquetes Recibidos</h3>
+                            <ul class="list-disc ml-5 space-y-1"
+                                th:with="paquetesRecibidos = ${@parqueaderoHelper.EncontarObs('Encomienda',apt.id)}">
+                                <th:block th:if="${paquetesRecibidos != null and paquetesRecibidos.size() > 0}">
+                                    <li th:each="obs : ${paquetesRecibidos}">
+                                        <span
+                                            th:text="${obs?.correspondencia} + ' (' + ${#dates.format(obs?.createdAt, 'dd/MM/yyyy HH:mm')} + ')'"></span>
+                                        <a th:href="@{/Correspondencias/deleteObservacion(id=${obs.id})}"
+                                            class="inline-flex items-center justify-center p-1 rounded-full bg-green-500 text-white text-xs leading-none transition-colors duration-200 hover:bg-green-600 ml-2"
+                                            onclick="return confirm('¿Estás seguro de que este paquete fue entregado?');"
+                                            title="Entregar paquete">
+                                            <i class="hgi hgi-stroke hgi-checkmark-badge-01 text-xs"></i>
+                                        </a>
+                                    </li>
+                                </th:block>
+                                <th:block th:unless="${paquetesRecibidos != null and paquetesRecibidos.size() > 0}">
+                                    <p>No hay paquetes recibidos registrados.</p>
+                                </th:block>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="font-semibold text-[#138fcb] mb-2">💡 Recibos de Servicios</h3>
+                            <ul class="list-disc ml-5 space-y-1"
+                                th:with="recibosLuz = ${@parqueaderoHelper.EncontarObs('Recibo',apt.id)}">
+                                <th:block th:if="${recibosLuz != null and recibosLuz.size() > 0}">
+                                    <li th:each="obs : ${recibosLuz}">
+                                        <span
+                                            th:text="${obs?.correspondencia} + ' (' + ${#dates.format(obs?.createdAt, 'dd/MM/yyyy HH:mm')} + ')'"></span>
+                                        <a th:href="@{/Correspondencias/deleteObservacion(id=${obs.id})}"
+                                            class="inline-flex items-center justify-center p-1 rounded-full bg-green-500 text-white text-xs leading-none transition-colors duration-200 hover:bg-green-600 ml-2"
+                                            onclick="return confirm('¿Estás seguro de que este recibo fue entregado?');"
+                                            title="Entregar recibo">
+                                            <i class="hgi hgi-stroke hgi-checkmark-badge-01 text-xs"></i>
+                                        </a>
+                                    </li>
+                                </th:block>
+                                <th:block th:unless="${recibosLuz != null and recibosLuz.size() > 0}">
+                                    <p>No hay recibos de servicios registrados.</p>
+                                </th:block>
+                            </ul>
+                        </div>
+
+                        <div>
+                            <h3 class="font-semibold text-[#138fcb] mb-2">🚶 Últimos Visitantes</h3>
+                            <ul class="list-disc ml-5 space-y-1">
+                                <th:block
+                                    th:with="visitantesApt = ${@parqueaderoHelper.Encontrar(apt)}, visitantesVApt = ${@parqueaderoHelper.EncontrarV(apt)}">
+                                    <th:block th:if="${visitantesApt != null and !visitantesApt.isEmpty()}">
+                                        <li th:each="vis : ${visitantesApt}"
+                                            th:text="${vis?.nombre + ' (' + #dates.format(vis?.fechaIngreso, 'dd/MM/yyyy HH:mm') + ')'}">
+                                        </li>
+                                    </th:block>
+
+                                    <th:block th:if="${visitantesVApt != null and !visitantesVApt.isEmpty()}">
+                                        <li th:each="vis : ${visitantesVApt}"
+                                            th:text="${vis?.firstName + ' (' + #dates.format(vis?.createdAt, 'dd/MM/yyyy HH:mm') + ')'}">
+                                        </li>
+                                    </th:block>
+
+                                    <th:block
+                                        th:if="${(visitantesApt == null or visitantesApt.isEmpty()) and (visitantesVApt == null or visitantesVApt.isEmpty())}">
+                                        <p>No registrados</p>
+                                    </th:block>
+                                </th:block>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div
+                        class="px-6 py-4 bg-gray-50 rounded-b-xl flex flex-col sm:flex-row justify-end gap-3 border-t border-gray-200">
+                        <button type="button" th:data-apartamento-id="${apt.id}" data-tipo="Recibo"
+                            class="btn-add-observacion inline-flex items-center justify-center px-4 py-2 bg-yellow-500 hover:bg-yellow-600 text-white rounded-lg transition duration-300 shadow-md w-full sm:w-auto text-center">
+                            <i class="hgi hgi-stroke hgi-lightbulb-01 mr-2"></i> Añadir Recibo de Servicio
+                        </button>
+
+                        <button type="button" th:data-apartamento-id="${apt.id}" data-tipo="Encomienda"
+                            class="btn-add-observacion inline-flex items-center justify-center px-4 py-2 bg-sky-500 hover:bg-blue-600 text-white rounded-lg transition duration-300 shadow-md w-full sm:w-auto text-center">
+                            <i class="hgi hgi-stroke hgi-box-01 mr-2"></i> Añadir Paquete
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex justify-center mt-10 gap-2 w-full max-w-6xl">
+                <a th:if="${!apartamentosPage?.first}"
+                    th:href="@{/Correspondencias/list(page=${currentPage - 1}, torre=${param.torre}, piso=${param.piso}, search=${param.search})}"
+                    class="px-4 py-2 bg-[#138fcb] text-white rounded hover:bg-blue-700">Anterior</a>
+                <span th:each="i : ${#numbers.sequence(startPage, endPage)}"
+                    th:classappend="${i == currentPage} ? 'bg-[#138fcb] text-white' : 'bg-gray-200'"
+                    class="px-4 py-2 rounded cursor-pointer">
+                    <a th:href="@{/Correspondencias/list(page=${i}, torre=${param.torre}, piso=${param.piso}, search=${param.search})}"
+                        th:text="${i + 1}"></a>
+                </span>
+                <a th:if="${!apartamentosPage?.last}"
+                    th:href="@{/Correspondencias/list(page=${currentPage + 1}, torre=${param.torre}, piso=${param.piso}, search=${param.search})}"
+                    class="px-4 py-2 bg-[#138fcb] text-white rounded hover:bg-blue-700">Siguiente</a>
+            </div>
+        </div>
+    </main>
+
+    <div id="observacionModal"
+        class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden flex items-center justify-center z-50">
+        <div class="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-6 text-[#138fcb] text-center">Registrar Correspondencia</h2>
+            <form th:action="@{/Correspondencias/saveObservacion}" method="post">
+                <input type="hidden" name="apartamentoId" id="modalApartamentoId" />
+                <input type="hidden" name="tipo" id="modalTipo" />
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+
+                <div class="mb-4">
+                    <label for="modalDescripcion" class="block text-sm font-medium text-gray-700">Descripción / No. de
+                        Correspondencia</label>
+                    <input type="text" id="modalDescripcion" name="correspondencia"
+                        class="mt-1 block w-full border border-gray-300 rounded-md p-2" required
+                        placeholder="Ej: Paquete de Amazon, Recibo de la luz #123" />
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Apartamento:</label>
+                    <p id="modalApartamentoInfo" class="text-lg font-semibold text-gray-900"></p>
+                </div>
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-gray-700">Tipo:</label>
+                    <p id="modalTipoInfo" class="text-lg font-semibold text-gray-900"></p>
+                </div>
+
+                <div class="flex justify-end gap-3 mt-6">
+                    <button type="button" id="closeModalBtn"
+                        class="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-400 transition">Cancelar</button>
+                    <button type="submit"
+                        class="bg-[#138fcb] text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">Guardar
+                        Correspondencia</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+        document.addEventListener('DOMContentLoaded', function () {
+
+            const observacionModal = document.getElementById('observacionModal');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+            const btnAddObservacion = document.querySelectorAll('.btn-add-observacion');
+
+            btnAddObservacion.forEach(button => {
+                button.addEventListener('click', function () {
+                    const apartamentoId = this.dataset.apartamentoId;
+                    const tipo = this.dataset.tipo;
+
+                    document.getElementById('modalApartamentoId').value = apartamentoId;
+                    document.getElementById('modalTipo').value = tipo;
+                    document.getElementById('modalApartamentoInfo').textContent = "ID: " + apartamentoId;
+                    document.getElementById('modalTipoInfo').textContent = tipo;
+
+                    observacionModal.classList.remove('hidden');
+                    observacionModal.classList.add('flex');
+                });
+            });
+
+            closeModalBtn.addEventListener('click', function () {
+                observacionModal.classList.add('hidden');
+                observacionModal.classList.remove('flex');
+                document.getElementById('modalDescripcion').value = '';
+            });
+
+            observacionModal.addEventListener('click', function (event) {
+                if (event.target === observacionModal) {
+                    closeModalBtn.click();
+                }
+            });
+
+            const successMessage = /*[[${successMessage}]]*/ null;
+            const errorMessage = /*[[${errorMessage}]]*/ null;
+
+            if (successMessage !== null && successMessage !== '') {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'fixed top-4 right-4 p-4 bg-green-500 text-white rounded-lg shadow-lg z-50';
+                alertDiv.textContent = successMessage;
+                document.body.appendChild(alertDiv);
+                setTimeout(() => alertDiv.remove(), 3000);
+            }
+
+            if (errorMessage !== null && errorMessage !== '') {
+                const alertDiv = document.createElement('div');
+                alertDiv.className = 'fixed top-4 right-4 p-4 bg-red-500 text-white rounded-lg shadow-lg z-50';
+                alertDiv.textContent = errorMessage;
+                document.body.appendChild(alertDiv);
+                setTimeout(() => alertDiv.remove(), 3000);
+            }
+
+        });
+        /*]]>*/
+    </script>
+
+
+
+</body>
+
+</html>

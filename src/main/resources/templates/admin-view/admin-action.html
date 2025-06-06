@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Urbify | Sistema de Gestión Residencial</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+  <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/x-icon" />
+</head>
+
+<body class="bg-gray-100 font-sans">
+  <!-- Sidebar fijo -->
+  <aside
+    class="fixed top-0 left-0 w-64 h-screen bg-[#138fcb] text-white flex flex-col justify-between shadow-lg overflow-y-auto z-50">
+    <div>
+      <div class="p-6 flex flex-col items-center text-center">
+        <img class="w-24 h-24 rounded-full border-4 border-white bg-white" th:src="@{/img/admin.png}"
+          alt="Perfil Admin" />
+        <h2 class="mt-4 text-xl font-bold" th:text="${admin.firstName + ' ' + admin.lastName}">Nombre Admin</h2>
+        <p class="text-sm text-white/80" th:text="${admin.email}">admin@email.com</p>
+      </div>
+      <nav class="flex flex-col gap-2 px-6 text-lg">
+        <a th:href="@{/admins/action}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+          <i class="hgi hgi-stroke hgi-home-06"></i> Inicio
+        </a>
+        <a th:href="@{/admins/vigilants}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+          <i class="hgi hgi-stroke hgi-user"></i> Registrar Vigilantes
+        </a>
+        <a th:href="@{/payments}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+          <i class="hgi hgi-stroke hgi-eye"></i> Ver Pagos
+        </a>
+        <a th:href="@{/reserves/list}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+          <i class="hgi hgi-stroke hgi-calendar-03 text-xl"></i> Salón Social
+        </a>
+        <a th:href="@{/renters/list}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+          <i class="hgi hgi-stroke hgi-house-01 text-xl"></i> Inquilinos
+        </a>
+        <a th:href="@{/admins/reports}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+          <i class="hgi hgi-stroke hgi-chart"></i> Reportes
+        </a>
+      </nav>
+    </div>
+    <div class="px-6 py-4">
+      <a th:href="@{/logout}"
+        class="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-2 rounded w-full text-center">
+        <i class="hgi hgi-stroke hgi-logout-05"></i> Cerrar Sesión
+      </a>
+    </div>
+  </aside>
+
+  <!-- Contenido Principal -->
+  <main class="ml-64 p-8 bg-[url(/img/fondo4.jpg)] bg-cover bg-no-repeat bg-center bg-fixed min-h-screen">
+    <header class="flex justify-between items-center mb-8">
+      <div>
+        <h1 class="text-3xl font-bold text-gray-800">Panel de Administración</h1>
+        <p class="text-gray-600">
+          Bienvenido/a, <span class="text-[#138fcb] font-semibold" th:text="${admin.firstName}">Admin</span>
+        </p>
+      </div>
+      <img th:src="@{/img/logo.png}" class="h-24" alt="Logo Urbify" />
+    </header>
+
+    <!-- Tarjetas -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div class="bg-blue-500 rounded-lg shadow-md p-4 flex items-center text-white">
+        <div class="bg-white text-blue-500 rounded-full p-2 mr-4">
+          <i class="hgi hgi-stroke hgi-user text-2xl"></i>
+        </div>
+        <div>
+          <div class="text-xl font-bold" th:text="${conteoVisitantes}">43</div>
+          <div class="text-sm opacity-80">Visitantes</div>
+        </div>
+      </div>
+
+      <div class="bg-blue-500 rounded-lg shadow-md p-4 flex items-center text-white">
+        <div class="bg-white text-blue-500 rounded-full p-2 mr-4">
+          <i class="hgi hgi-stroke hgi-car-01 text-2xl"></i>
+        </div>
+        <div>
+          <div class="text-xl font-bold" th:text="${conteoVehiculos}">12</div>
+          <div class="text-sm opacity-80">Vehículos Visitantes</div>
+        </div>
+      </div>
+
+      <div class="bg-blue-500 rounded-lg shadow-md p-4 flex items-center text-white">
+        <div class="bg-white text-blue-500 rounded-full p-2 mr-4">
+          <i class="hgi hgi-stroke hgi-permanent-job text-2xl"></i>
+        </div>
+        <div>
+          <div class="text-xl font-bold" th:text="${conteoVigilantes}">4</div>
+          <div class="text-sm opacity-80">Vigilantes activos</div>
+        </div>
+      </div>
+
+      <div class="bg-blue-500 rounded-lg shadow-md p-4 flex items-center text-white">
+        <div class="bg-white text-blue-500 rounded-full p-2 mr-4">
+          <i class="hgi hgi-stroke hgi-clipboard text-2xl"></i>
+        </div>
+        <div>
+          <div class="text-xl font-bold" th:text="${conteoAptos}">20</div>
+          <div class="text-sm opacity-80">Apartamentos Disponibles</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sección de acciones -->
+    <h1 class="text-xl text-center text-[#138fcb] font-bold py-4">¿QUÉ DESEAS HACER?</h1>
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 px-2 place-items-center">
+      <div class="w-[280px] bg-white shadow-md rounded-xl p-5 hover:shadow-xl transition border-4 border-[#138fcb]">
+        <h2 class="text-lg font-semibold text-gray-800 mb-3">Registrar Vigilantes</h2>
+        <a th:href="@{/admins/vigilants}"
+          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded block text-center">
+          <i class="hgi hgi-stroke hgi-user text-xl"></i> Crear Vigilante
+        </a>
+      </div>
+
+      <div class="w-[280px] bg-white shadow-md rounded-xl p-5 hover:shadow-xl transition border-4 border-[#138fcb]">
+        <h2 class="text-lg font-semibold text-gray-800 mb-3">Pagos</h2>
+        <a th:href="@{/payments}"
+          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded block text-center">
+          <i class="hgi hgi-stroke hgi-eye text-xl"></i> Registro de Pagos
+        </a>
+      </div>
+
+      <div class="w-[280px] bg-white shadow-md rounded-xl p-5 hover:shadow-xl transition border-4 border-[#138fcb]">
+        <h2 class="text-lg font-semibold text-gray-800 mb-3">Salón Social</h2>
+        <a th:href="@{/reserves/list}"
+          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded block text-center">
+          <i class="hgi hgi-stroke hgi-calendar-03 text-xl"></i> Reservar Salón
+        </a>
+      </div>
+
+      <div class="col-span-full flex justify-center gap-6">
+        <div class="w-[280px] bg-white shadow-md rounded-xl p-5 hover:shadow-xl transition border-4 border-[#138fcb]">
+          <h2 class="text-lg font-semibold text-gray-800 mb-3">Nuevo Inquilino</h2>
+          <a th:href="@{/renters/list}"
+            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded block text-center">
+            <i class="hgi hgi-stroke hgi-house-01 text-xl"></i> Registrar Inquilino
+          </a>
+        </div>
+
+        <div class="w-[280px] bg-white shadow-md rounded-xl p-5 hover:shadow-xl transition border-4 border-[#138fcb]">
+          <h2 class="text-lg font-semibold text-gray-800 mb-3">Reportes</h2>
+          <a th:href="@{/admins/reports}"
+            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-2 rounded block text-center">
+            <i class="hgi hgi-stroke hgi-chart text-xl"></i> Ver reportes
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+
+</html>

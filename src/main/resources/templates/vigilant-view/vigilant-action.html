@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urbify | Sistema de Gestión Residencial</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/x-icon" />
+</head>
+
+<body>
+    <main class="ml-64 p-8 bg-[url('/img/fondo4.jpg')] bg-cover bg-no-repeat bg-center bg-fixed min-h-screen">
+        <!-- Sidebar fijo -->
+        <aside
+            class="fixed top-0 left-0 w-64 h-screen bg-[#138fcb] text-white flex flex-col justify-between shadow-lg overflow-y-auto z-50">
+            <div>
+                <div class="p-6 flex flex-col items-center text-center">
+                    <img class="w-24 h-24 rounded-full border-4 border-white bg-white" th:src="@{/img/vigilante.png}"
+                        alt="Imagen de Perfil Vigilante" />
+                    <h2 class="mt-4 text-xl font-bold" th:text="${vigilant.firstName + ' ' + vigilant.lastName}">Nombre
+                        Vigilante</h2>
+                    <p class="text-sm text-white/80" th:text="${vigilant.email}">vigilant@email.com</p>
+                </div>
+                <nav class="px-6 flex flex-col gap-2 text-md">
+                    <a th:href="@{/vigilant/action}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-home-06 text-white"></i>
+                        <span class="text-white font-semibold">Inicio</span>
+                    </a>
+                    <a th:href="@{/vigilant/visitante}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-user-circle text-white"></i>
+                        <span class="text-white font-semibold">Persona</span>
+                    </a>
+                    <a th:href="@{/vigilant/vehicles}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-car-02 text-white"></i>
+                        <span class="text-white font-semibold">Vehiculo</span>
+                    </a>
+                    <a th:href="@{/vigilant/parqueadero}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-car-parking-02 text-white"></i>
+                        <span class="text-white font-semibold">Parqueadero</span>
+                    </a>
+                    <a th:href="@{/vigilant/reservas}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-calendar-03 text-white"></i>
+                        <span class="text-white font-semibold">Reservas</span>
+                    </a>
+                    <a th:href="@{/vigilant/reporte-visitantes}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-complaint text-white"></i>
+                        <span class="text-white font-semibold">Reportes</span>
+                    </a>
+                    <a th:href="@{/Correspondencias/list}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-package-delivered text-white"></i>
+                        <span class="text-white font-semibold">Correspondencias</span>
+                    </a>
+                </nav>
+            </div>
+
+            <div class="px-6 py-4">
+                <form th:action="@{/logout}" method="post" class="w-full">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit"
+                        class="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-2 rounded w-full text-center">
+                        <i class="hgi hgi-stroke hgi-logout-05"></i> Cerrar Sesión
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+
+        <!-- Contenido principal -->
+        <section>
+            <header class="flex justify-between items-center mb-8 px-6">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-800 mb-2">Panel de Vigilante</h1>
+                    <div class="flex items-center space-x-6 text-[#138fcb] font-semibold text-sm select-none">
+                        <span>Bienvenido/a, <span th:text="${vigilant.firstName}">Vigilante</span></span>
+
+                        <div class="flex items-center space-x-1 text-gray-500" title="ID">
+                            <i class="hgi hgi-stroke hgi-user"></i>
+                            <span th:text="${vigilant.identification}">123456789</span>
+                        </div>
+
+                        <div class="flex items-center space-x-1 text-gray-500" title="Código">
+                            <i class="hgi hgi-stroke hgi-labor"></i>
+                            <span th:text="${vigilant.code}">VIG001</span>
+                        </div>
+
+                        <div class="flex items-center space-x-1 text-gray-500" title="Turno">
+                            <i class="hgi hgi-stroke hgi-clock-01"></i>
+                            <span th:text="${vigilant.turn}">Noche</span>
+                        </div>
+
+                        <div class="flex items-center space-x-1 text-gray-500" title="Empresa">
+                            <i class="hgi hgi-stroke hgi-permanent-job"></i>
+                            <span th:text="${vigilant.company}">Seguridad XYZ</span>
+                        </div>
+                    </div>
+                </div>
+
+                <img th:src="@{/img/logo.png}" class="h-24" alt="Logo Urbify" />
+            </header>
+
+
+            <h2 class="text-4xl text-[#138fcb] font-bold mb-4 text-center py-4">¿QUÉ DESEAS HACER?</h2>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 place-items-center px-4">
+                <a th:href="@{/vigilant/visitante}" class="group block w-52 rounded-2xl bg-[#138fcb] p-5 shadow-md
+            transform transition duration-400 hover:scale-105 hover:shadow-xl
+            ring-2 ring-transparent group-hover:ring-white cursor-pointer">
+                    <div class="flex flex-col items-center space-y-3">
+                        <i class="hgi hgi-stroke hgi-user-circle text-white text-[3.5rem] drop-shadow-md"></i>
+                        <span
+                            class="text-white text-base font-semibold tracking-wide select-none text-center leading-tight">PERSONA</span>
+                    </div>
+                </a>
+
+                <a th:href="@{/vigilant/vehicles}" class="group block w-52 rounded-2xl bg-[#1178b8] p-5 shadow-md
+            transform transition duration-400 hover:scale-105 hover:shadow-xl
+            ring-2 ring-transparent group-hover:ring-white cursor-pointer">
+                    <div class="flex flex-col items-center space-y-3">
+                        <i class="hgi hgi-stroke hgi-car-02 text-white text-[3.5rem] drop-shadow-md"></i>
+                        <span
+                            class="text-white text-base font-semibold tracking-wide select-none text-center leading-tight">VEHÍCULO</span>
+                    </div>
+                </a>
+
+                <a th:href="@{/vigilant/parqueadero}" class="group block w-52 rounded-2xl bg-[#1a9ee1] p-5 shadow-md
+            transform transition duration-400 hover:scale-105 hover:shadow-xl
+            ring-2 ring-transparent group-hover:ring-white cursor-pointer">
+                    <div class="flex flex-col items-center space-y-3">
+                        <i class="hgi hgi-stroke hgi-car-parking-02 text-white text-[3.5rem] drop-shadow-md"></i>
+                        <span
+                            class="text-white text-base font-semibold tracking-wide select-none text-center leading-tight">PARQUEADERO</span>
+                    </div>
+                </a>
+
+                <a th:href="@{/vigilant/reservas}" class="group block w-52 rounded-2xl bg-[#138fcb] p-5 shadow-md
+            transform transition duration-400 hover:scale-105 hover:shadow-xl
+            ring-2 ring-transparent group-hover:ring-white cursor-pointer">
+                    <div class="flex flex-col items-center space-y-3">
+                        <i class="hgi hgi-stroke hgi-calendar-03 text-white text-[3.5rem] drop-shadow-md"></i>
+                        <span
+                            class="text-white text-base font-semibold tracking-wide select-none text-center leading-tight">RESERVAS</span>
+                    </div>
+                </a>
+
+                <a th:href="@{/vigilant/reporte-visitantes}" class="group block w-52 rounded-2xl bg-[#1178b8] p-5 shadow-md
+            transform transition duration-400 hover:scale-105 hover:shadow-xl
+            ring-2 ring-transparent group-hover:ring-white cursor-pointer">
+                    <div class="flex flex-col items-center space-y-3">
+                        <i class="hgi hgi-stroke hgi-complaint text-white text-[3.5rem] drop-shadow-md"></i>
+                        <span
+                            class="text-white text-base font-semibold tracking-wide select-none text-center leading-tight">REPORTES</span>
+                    </div>
+                </a>
+
+                <a th:href="@{/Correspondencias/list}" class="group block w-52 rounded-2xl bg-[#1a9ee1] p-5 shadow-md
+            transform transition duration-400 hover:scale-105 hover:shadow-xl
+            ring-2 ring-transparent group-hover:ring-white cursor-pointer">
+                    <div class="flex flex-col items-center space-y-3">
+                        <i class="hgi hgi-stroke hgi-package-delivered text-white text-[3.5rem] drop-shadow-md"></i>
+                        <span
+                            class="text-white text-sm font-semibold tracking-wide select-none text-center leading-tight">CORRESPONDENCIAS</span>
+                    </div>
+                </a>
+            </div>
+
+
+        </section>
+    </main>
+</body>
+
+</html>

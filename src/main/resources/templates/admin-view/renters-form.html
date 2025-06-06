@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urbify | Registro Propietario</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/x-icon" />
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+    <!-- Sidebar fijo -->
+    <aside
+        class="fixed top-0 left-0 w-64 h-screen bg-[#138fcb] text-white flex flex-col justify-between shadow-lg overflow-y-auto z-50">
+        <div>
+            <div class="p-6 flex flex-col items-center text-center">
+                <img class="w-24 h-24 rounded-full border-4 border-white bg-white" th:src="@{/img/admin.png}"
+                    alt="Perfil Admin" />
+                <h2 class="mt-4 text-xl font-bold" th:text="${admin.firstName + ' ' + admin.lastName}">
+                    Nombre Admin
+                </h2>
+                <p class="text-sm text-white/80" th:text="${admin.email}">
+                    admin@email.com
+                </p>
+            </div>
+            <nav class="flex flex-col gap-2 px-6 text-lg">
+                <a th:href="@{/admins/action}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-home-06"></i> Inicio
+                </a>
+                <a th:href="@{/admins/vigilants}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-user"></i> Registrar Vigilantes
+                </a>
+                <a th:href="@{/pagos}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-eye"></i> Ver Pagos
+                </a>
+                <a th:href="@{/salon}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-settings"></i> Salón Social
+                </a>
+                <a th:href="@{/renters/list}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-house-01"></i> Inquilinos
+                </a>
+                <a th:href="@{/reportes}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-chart"></i> Reportes
+                </a>
+            </nav>
+        </div>
+        <div class="px-6 py-4">
+            <a th:href="@{/logout}"
+                class="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-2 rounded w-full text-center">
+                <i class="hgi hgi-stroke hgi-logout-05"></i> Cerrar Sesión
+            </a>
+        </div>
+    </aside>
+
+    <main class="ml-64 p-10 min-h-screen bg-[url(/img/fondo4.jpg)] bg-cover bg-no-repeat bg-center bg-fixed">
+        <div class="flex justify-between items-center mb-10">
+            <a th:href="@{/renters/list}"
+                class="inline-flex items-center px-4 py-2 bg-[#138fcb] hover:bg-blue-700 text-white rounded-lg transition duration-300 shadow-md">
+                <i class="hgi hgi-stroke hgi-arrow-left-02 mr-2"></i> Volver
+            </a>
+            <img class="h-20" th:src="@{/img/logo.png}" alt="Logo Urbify" />
+        </div>
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-[#138fcb]">Registro Propietario</h1>
+        </div>
+
+        <div class="flex justify-center">
+            <form th:action="@{/renters/new}" th:object="${propietario}" method="post"
+                class="w-full max-w-3xl bg-transparent rounded-2xl p-8">
+                <div th:if="${#fields.hasErrors('identification')}" th:errors="*{identification}"
+                    class="flex justify-center items-center bg-red-200 text-red-600 border border-red-600 text-lg text-center max-w-80 mb-4 mx-auto">
+                </div>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <input type="hidden" th:field="*{id}" />
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+
+                    <div>
+                        <label for="first_name" class="block text-lg font-medium mb-2">Nombre</label>
+                        <input type="text" th:field="*{firstName}" id="first_name" placeholder="Nombre"
+                            class="w-full rounded-2xl border-2 border-[#138fcb] py-3 px-5 text-gray-700 focus:shadow-md outline-none"
+                            required />
+                    </div>
+
+                    <div>
+                        <label for="last_name" class="block text-lg font-medium mb-2">Apellido</label>
+                        <input type="text" th:field="*{lastName}" id="last_name" placeholder="Apellido"
+                            class="w-full rounded-2xl border-2 border-[#138fcb] py-3 px-5 text-gray-700 focus:shadow-md outline-none"
+                            required />
+                    </div>
+
+                    <div>
+                        <label for="identification" class="block text-lg font-medium mb-2">Identificación</label>
+                        <input type="text" th:field="*{identification}" id="identification" placeholder="Identificación"
+                            class="w-full rounded-2xl border-2 border-[#138fcb] py-3 px-5 text-gray-700 focus:shadow-md outline-none"
+                            required />
+
+                    </div>
+
+
+                    <div>
+                        <label for="telephone" class="block text-lg font-medium mb-2">Teléfono</label>
+                        <input type="text" th:field="*{telephone}" id="telephone" placeholder="Teléfono"
+                            class="w-full rounded-2xl border-2 border-[#138fcb] py-3 px-5 text-gray-700 focus:shadow-md outline-none"
+                            required />
+                    </div>
+
+                    <div th:if="${propietario.id != null}" class="md:col-span-2 flex justify-center">
+                        <div class="w-full md:w-1/2">
+                            <label for="email" class="block text-lg font-medium mb-2 text-center">Email</label>
+                            <input type="email" th:field="*{email}" id="email" placeholder="Email"
+                                class="w-full rounded-2xl border-2 border-[#138fcb] py-3 px-5 text-gray-700 focus:shadow-md outline-none"
+                                required />
+                        </div>
+                    </div>
+
+                    <div th:if="${propietario.id == null}">
+                        <label for="email" class="block text-lg font-medium mb-2">Email</label>
+                        <input type="email" th:field="*{email}" id="email" placeholder="Email"
+                            class="w-full rounded-2xl border-2 border-[#138fcb] py-3 px-5 text-gray-700 focus:shadow-md outline-none"
+                            required />
+                    </div>
+
+                    <th:block th:if="${propietario.apartamento != null}">
+                        <input type="hidden" name="apartamentoId" th:value="${propietario.apartamento.id}" />
+                    </th:block>
+                    <div th:if="${propietario.id == null}">
+                        <label for="apartamento" class="block text-lg font-medium mb-2">Apartamento</label>
+                        <select id="apartamento" name="apartamentoId"
+                            class="w-full rounded-2xl border-2 border-[#138fcb] py-3 px-5 text-gray-700 focus:shadow-md outline-none"
+                            required>
+                            <option disabled selected value="">Seleccione un apartamento</option>
+                            <option th:each="apto : ${aptoAvailable}" th:value="${apto.id}"
+                                th:text="'#' + ${apto.apartamento} + ' - Torre ' + ${apto.torre}">
+                            </option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="text-center mt-6">
+                    <button type="submit"
+                        class="bg-[#138fcb] hover:bg-blue-600 transition duration-300 text-white font-bold py-3 px-8 rounded-2xl shadow-md">
+                        <i class="hgi hgi-stroke hgi-user-add-01 pr-2"></i> Guardar
+                    </button>
+                </div>
+            </form>
+        </div>
+
+    </main>
+</body>
+
+</html>

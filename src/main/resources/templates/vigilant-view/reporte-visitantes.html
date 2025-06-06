@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Urbify | Sistema de Gestión Residencial</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+  <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/x-icon" />
+</head>
+
+<body>
+  <main class="ml-64 p-8 bg-[url('/img/fondo4.jpg')] bg-cover bg-no-repeat bg-center bg-fixed min-h-screen">
+    <!-- Sidebar fijo -->
+    <aside
+      class="fixed top-0 left-0 w-64 h-screen bg-[#138fcb] text-white flex flex-col justify-between shadow-lg overflow-y-auto z-50">
+      <div>
+        <div class="p-6 flex flex-col items-center text-center">
+          <img class="w-24 h-24 rounded-full border-4 border-white bg-white" th:src="@{/img/vigilante.png}"
+            alt="Imagen de Perfil Vigilante" />
+          <h2 class="mt-4 text-xl font-bold" th:text="${vigilant.firstName + ' ' + vigilant.lastName}">
+            Nombre Vigilante
+          </h2>
+          <p class="text-sm text-white/80" th:text="${vigilant.email}">
+            vigilant@email.com
+          </p>
+        </div>
+        <nav class="px-6 flex flex-col gap-2 text-md">
+          <a th:href="@{/vigilant/action}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-home-06 text-white"></i>
+            <span class="text-white font-semibold">Inicio</span>
+          </a>
+          <a th:href="@{/vigilant/visitante}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-user-circle text-white"></i>
+            <span class="text-white font-semibold">Persona</span>
+          </a>
+          <a th:href="@{/vigilant/vehicles}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-car-02 text-white"></i>
+            <span class="text-white font-semibold">Vehiculo</span>
+          </a>
+          <a th:href="@{/vigilant/parqueadero}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-car-parking-02 text-white"></i>
+            <span class="text-white font-semibold">Parqueadero</span>
+          </a>
+          <a th:href="@{/vigilant/reservas}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-calendar-03 text-white"></i>
+            <span class="text-white font-semibold">Reservas</span>
+          </a>
+          <a th:href="@{/vigilant/reporte-visitantes}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-complaint text-white"></i>
+            <span class="text-white font-semibold">Reportes</span>
+          </a>
+          <a th:href="@{/Correspondencias/list}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-package-delivered text-white"></i>
+            <span class="text-white font-semibold">Correspondencias</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="px-6 py-4">
+        <form th:action="@{/logout}" method="post" class="w-full">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+          <button type="submit"
+            class="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-2 rounded w-full text-center">
+            <i class="hgi hgi-stroke hgi-logout-05"></i> Cerrar Sesión
+          </button>
+        </form>
+      </div>
+    </aside>
+    <div class="flex flex-col items-center text-center w-full">
+      <div class="flex justify-between items-center w-full max-w-6xl mb-8">
+        <a th:href="@{/vigilant/action}"
+          class="inline-flex items-center px-4 py-2 bg-[#138fcb] hover:bg-blue-700 text-white rounded-lg transition duration-300 shadow-md">
+          <i class="hgi hgi-stroke hgi-arrow-left-02 mr-2"></i> Volver
+        </a>
+        <img class="h-20" src="/img/logo.png" alt="Logo Urbify" />
+      </div>
+      <h1 class="text-3xl font-bold text-center mb-8 text-[#138fcb]">REPORTES</h1>
+      <a th:href="@{/ObjetosPerdidos/list}"
+          class="mb-8 inline-flex items-center px-4 py-2 bg-[#138fcb] hover:bg-blue-700 text-white rounded-lg transition duration-300 shadow-md">
+          <i class="hgi hgi-stroke hgi-bubble-chat-question mr-2"></i> Objetos Perdidos
+        </a>
+      <div class="max-w-5xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
+        <table class="min-w-full table-auto text-center border-collapse">
+          <thead class="bg-[#138fcb]">
+            <tr>
+              <th class="px-6 py-3 text-md text-white">Apartamento
+                Visita</th>
+              <th class="px-6 py-3 text-md text-white">Nombre</th>
+              <th class="px-6 py-3 text-md text-white">Placa</th>
+              <th class="px-6 py-3 text-md text-white">Visitas en el
+                Mes</th>
+              <th class="px-6 py-3 text-md text-white">Estancia mayor
+                a 72 horas</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="item : ${reporte}" th:classappend="${item.masDe72Horas} ? 'bg-red-100' : 'bg-green-100'">
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700" th:text="${item.Apartamento}">0</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700" th:text="${item.nombrePropietario}">0</td>
+
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900" th:text="${item.placa}">Placa
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700" th:text="${item.visitasMes}">0</td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-700"
+                th:text="${item.masDe72Horas} ? 'Sí' : 'No'">No</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>

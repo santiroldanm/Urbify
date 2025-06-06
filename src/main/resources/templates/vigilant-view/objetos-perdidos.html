@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urbify | Sistema de Gestion Residencial</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/x-icon" />
+</head>
+
+<body>
+    <main class="ml-64 p-8 bg-[url('/img/fondo4.jpg')] bg-cover bg-no-repeat bg-center bg-fixed min-h-screen">
+        <!-- Sidebar fijo-->
+        <aside
+            class="fixed top-0 left-0 w-64 h-screen bg-[#138fcb] text-white flex flex-col justify-between shadow-lg overflow-y-auto z-50">
+            <div>
+                <div class="p-6 flex flex-col items-center text-center">
+                    <img class="w-24 h-24 rounded-full border-4 border-white bg-white" th:src="@{/img/vigilante.png}"
+                        alt="Imagen de Perfil Vigilante" />
+                    <h2 class="mt-4 text-xl font-bold" th:text="${vigilant.firstName + ' ' + vigilant.lastName}">Nombre
+                        Vigilante</h2>
+                    <p class="text-sm text-white/80" th:text="${vigilant.email}">vigilant@email.com</p>
+                </div>
+                <nav class="px-6 flex flex-col gap-2 text-md">
+                    <a th:href="@{/vigilant/action}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-home-06 text-white"></i>
+                        <span class="text-white font-semibold">Inicio</span>
+                    </a>
+                    <a th:href="@{/vigilant/visitante}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-user-circle text-white"></i>
+                        <span class="text-white font-semibold">Persona</span>
+                    </a>
+                    <a th:href="@{/vigilant/vehicles}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-car-02 text-white"></i>
+                        <span class="text-white font-semibold">Vehiculo</span>
+                    </a>
+                    <a th:href="@{/vigilant/parqueadero}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-car-parking-02 text-white"></i>
+                        <span class="text-white font-semibold">Parqueadero</span>
+                    </a>
+                    <a th:href="@{/vigilant/reservas}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-calendar-03 text-white"></i>
+                        <span class="text-white font-semibold">Reservas</span>
+                    </a>
+                    <a th:href="@{/vigilant/reporte-visitantes}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-complaint text-white"></i>
+                        <span class="text-white font-semibold">Reportes</span>
+                    </a>
+                    <a th:href="@{/Correspondencias/list}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-package-delivered text-white"></i>
+                        <span class="text-white font-semibold">Correspondencias</span>
+                    </a>
+                </nav>
+            </div>
+
+            <div class="px-6 py-4">
+                <form th:action="@{/logout}" method="post" class="w-full">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit"
+                        class="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-2 rounded w-full text-center">
+                        <i class="hgi hgi-stroke hgi-logout-05"></i> Cerrar Sesión
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <div class="flex flex-col items-center text-center w-full">
+
+            <div class="flex justify-between items-center w-full max-w-6xl mb-8">
+                <a th:href="@{/vigilant/reporte-visitantes}"
+                    class="inline-flex items-center px-4 py-2 bg-[#138fcb] hover:bg-blue-700 text-white rounded-lg transition duration-300 shadow-md">
+                    <i class="hgi hgi-stroke hgi-arrow-left-02 mr-2"></i> Volver
+                </a>
+                <img class="h-20" src="/img/logo.png" alt="Logo Urbify" />
+            </div>
+
+            <h1 class="text-3xl font-bold mb-6 text-center text-[#138fcb]">GESTIÓN DE OBJETOS PERDIDOS</h1>
+
+            <div th:if="${successMessage != null and !#strings.isEmpty(successMessage)}"
+                class="mb-6 p-4 bg-green-100 border border-green-400 text-green-700 rounded text-center">
+                <p th:text="${successMessage}"></p>
+            </div>
+            <div th:if="${errorMessage != null and !#strings.isEmpty(errorMessage)}"
+                class="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded text-center">
+                <p th:text="${errorMessage}"></p>
+            </div>
+
+            <div class="flex flex-col gap-6 w-full max-w-6xl">
+                <div class="bg-white shadow-md rounded-lg p-6 border-4 border-[#138fcb] flex-shrink-0">
+                    <h2 class="text-xl font-semibold mb-4 text-[#138fcb]">Registrar Nuevo Objeto Perdido</h2>
+                    <form th:action="@{/ObjetosPerdidos/save}" method="post" class="grid grid-cols-1 gap-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Descripción del Objeto</label>
+                            <input type="text" name="descripcion" maxlength="255"
+                                class="mt-1 block w-full border border-[#138fcb] rounded-md p-2"
+                                placeholder="Ej: Llaves con llavero de casa, Billetera negra" required />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Ubicación donde fue
+                                encontrado</label>
+                            <input type="text" name="ubicacionEncontrado" maxlength="100"
+                                class="mt-1 block w-full border border-[#138fcb] rounded-md p-2"
+                                placeholder="Ej: Cancha de fútbol, Entrada principal" required />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Fecha y Hora de Encuentro</label>
+                            <input type="datetime-local" name="fechaEncontrado"
+                                class="mt-1 block w-full border border-[#138fcb] rounded-md p-2" required />
+                        </div>
+
+                        <div class="col-span-1 text-center pt-4">
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            <button type="submit"
+                                class="bg-[#138fcb] text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">Registrar
+                                Objeto</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div
+                    class="bg-white shadow-md rounded-lg p-6 overflow-x-auto overflow-y-auto border-4 border-[#138fcb] flex-shrink-0">
+                    <h2 class="text-xl font-semibold mb-4 text-[#138fcb]">Listado de Objetos Perdidos</h2>
+                    <table class="min-w-full divide-y divide-gray-200 table-auto w-full">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 w-1/5">Descripción
+                                </th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 w-1/6">Ubicación</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 w-1/6">Fecha</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 w-1/12">Estado</th>
+                                <th class="px-4 py-3 text-left text-sm font-semibold text-gray-600 w-1/5">Reclama</th>
+                                <th class="px-4 py-3 text-center text-sm font-semibold text-gray-600 w-1/6">Acciones
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200" th:if="${!#lists.isEmpty(objetosPerdidos)}">
+                            <tr th:each="obj : ${objetosPerdidos}" class="hover:bg-gray-50">
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700"
+                                    th:text="${obj.descripcion}"></td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700"
+                                    th:text="${obj.ubicacionEncontrado}"></td>
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700"
+                                    th:text="${#temporals.format(obj.fechaEncontrado, 'dd/MM/yyyy HH:mm')}"></td>
+
+                                <td class="px-4 py-3 whitespace-nowrap">
+                                    <span th:text="${obj.estado == EstadoObjeto.ENCONTRADO ? 'Archivado' :
+                   obj.estado == EstadoObjeto.RECLAMADO ? 'Reclamado' :
+                   obj.estado == EstadoObjeto.DEVUELTO  ? 'Devuelto' : 'Desconocido'}" th:class="${obj.estado == EstadoObjeto.ENCONTRADO ? 'px-2 inline-flex text-xs font-semibold rounded-full bg-orange-100 text-orange-800' :
+                   obj.estado == EstadoObjeto.RECLAMADO ? 'px-2 inline-flex text-xs font-semibold rounded-full bg-green-100 text-green-800' :
+                   obj.estado == EstadoObjeto.DEVUELTO  ? 'px-2 inline-flex text-xs font-semibold rounded-full bg-blue-100 text-blue-800' :
+                   'px-2 inline-flex text-xs font-semibold rounded-full bg-gray-100 text-gray-800'}">
+                                    </span>
+                                </td>
+
+                                <td class="px-4 py-3 whitespace-nowrap text-sm text-gray-700"
+                                    th:text="${obj.nombreQuienReclamo != null ? obj.nombreQuienReclamo : 'N/A'}">
+                                </td>
+
+
+                                <td
+                                    class="px-4 py-3 whitespace-nowrap flex flex-col sm:flex-row sm:gap-2 justify-center items-center gap-2">
+                                    <form th:action="@{/ObjetosPerdidos/markReclamado}" method="post"
+                                        class="w-full sm:w-auto" id="formReclamado__${obj.id}">
+                                        <input type="hidden" name="id" th:value="${obj.id}" />
+                                        <input type="hidden" th:name="${_csrf.parameterName}"
+                                            th:value="${_csrf.token}" />
+                                        <input type="hidden" name="nombreQuienReclama" id="nombreReclama__${obj.id}" />
+                                        <button type="button" th:disabled="${obj.estado.name().equals('RECLAMADO')}" onclick="
+        const nombre = prompt('Ingrese el nombre de quien reclama:');
+        if(nombre && nombre.trim() !== '') {
+          document.getElementById('nombreReclama__${obj.id}').value = nombre.trim();
+          document.getElementById('formReclamado__${obj.id}').submit();
+        } else {
+          alert('Debe ingresar un nombre para reclamar.');
+        }
+      " class="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1 px-3 rounded text-xs">
+                                            Reclamado
+                                        </button>
+                                    </form>
+
+                                    <form th:action="@{/ObjetosPerdidos/delete}" method="post"
+                                        onsubmit="return confirm('¿Está seguro de que desea eliminar este objeto perdido?');"
+                                        class="w-full sm:w-auto">
+                                        <input type="hidden" name="id" th:value="${obj.id}" />
+                                        <input type="hidden" th:name="${_csrf.parameterName}"
+                                            th:value="${_csrf.token}" />
+                                        <button type="submit"
+                                            class="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded text-xs">
+                                            Eliminar
+                                        </button>
+                                    </form>
+                                </td>
+                                
+                            </tr>
+                        </tbody>
+                        <tbody th:if="${#lists.isEmpty(objetosPerdidos)}">
+                            <tr>
+                                <td colspan="6" class="px-4 py-6 text-center text-gray-500 italic">No hay objetos
+                                    perdidos registrados.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+</body>
+
+</html>

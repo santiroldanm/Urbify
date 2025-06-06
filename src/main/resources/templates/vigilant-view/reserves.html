@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Reservas de Cancha</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+</head>
+
+<body>
+    <main class="ml-64 p-8 bg-[url('/img/fondo4.jpg')] bg-cover bg-no-repeat bg-center bg-fixed min-h-screen">
+        <!-- Sidebar fijo -->
+        <aside
+            class="fixed top-0 left-0 w-64 h-screen bg-[#138fcb] text-white flex flex-col justify-between shadow-lg overflow-y-auto z-50">
+            <div>
+                <div class="p-6 flex flex-col items-center text-center">
+                    <img class="w-24 h-24 rounded-full border-4 border-white bg-white" th:src="@{/img/vigilante.png}"
+                        alt="Imagen de Perfil Vigilante" />
+                    <h2 class="mt-4 text-xl font-bold" th:text="${vigilant.firstName + ' ' + vigilant.lastName}">
+                        Nombre Vigilante
+                    </h2>
+                    <p class="text-sm text-white/80" th:text="${vigilant.email}">
+                        vigilant@email.com
+                    </p>
+                </div>
+                <nav class="px-6 flex flex-col gap-2 text-md">
+                    <a th:href="@{/vigilant/action}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-home-06 text-white"></i>
+                        <span class="text-white font-semibold">Inicio</span>
+                    </a>
+                    <a th:href="@{/vigilant/visitante}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-user-circle text-white"></i>
+                        <span class="text-white font-semibold">Persona</span>
+                    </a>
+                    <a th:href="@{/vigilant/vehicles}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-car-02 text-white"></i>
+                        <span class="text-white font-semibold">Vehiculo</span>
+                    </a>
+                    <a th:href="@{/vigilant/parqueadero}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-car-parking-02 text-white"></i>
+                        <span class="text-white font-semibold">Parqueadero</span>
+                    </a>
+                    <a th:href="@{/vigilant/reservas}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-calendar-03 text-white"></i>
+                        <span class="text-white font-semibold">Reservas</span>
+                    </a>
+                    <a th:href="@{/vigilant/reporte-visitantes}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-complaint text-white"></i>
+                        <span class="text-white font-semibold">Reportes</span>
+                    </a>
+                    <a th:href="@{/Correspondencias/list}"
+                        class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+                        <i class="hgi hgi-stroke hgi-package-delivered text-white"></i>
+                        <span class="text-white font-semibold">Correspondencias</span>
+                    </a>
+                </nav>
+            </div>
+
+            <div class="px-6 py-4">
+                <form th:action="@{/logout}" method="post" class="w-full">
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                    <button type="submit"
+                        class="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-2 rounded w-full text-center">
+                        <i class="hgi hgi-stroke hgi-logout-05"></i> Cerrar Sesión
+                    </button>
+                </form>
+            </div>
+        </aside>
+
+        <div class="flex flex-col items-center text-center w-full">
+            <div class="flex justify-between items-center w-full max-w-6xl mb-8">
+                <a th:href="@{/vigilant/action}"
+                    class="inline-flex items-center px-4 py-2 bg-[#138fcb] hover:bg-blue-700 text-white rounded-lg transition duration-300 shadow-md">
+                    <i class="hgi hgi-stroke hgi-arrow-left-02 mr-2"></i> Volver
+                </a>
+                <img class="h-20" src="/img/logo.png" alt="Logo Urbify" />
+            </div>
+
+            <h1 class="text-3xl font-bold mb-6 text-center text-[#138fcb]">RESERVAS DE CANCHA</h1>
+
+            <div th:if="${error}" class="mb-6 p-4 bg-amber-100 border border-amber-400 text-amber-700 rounded text-center">
+                <p th:text="${error}"></p>
+            </div>
+
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="md:w-1/2 bg-white shadow-md rounded-lg p-6 border-4 border-[#138fcb]">
+                    <h2 class="text-xl font-semibold mb-4 text-[#138fcb]"
+                        th:text="${reserva?.id != null ? 'Editar Reserva' : 'Nueva Reserva'}">Nueva Reserva</h2>
+                    <form th:action="${reserva?.id != null ? '/vigilant/reservas' : '/vigilant/reservas'}"
+                        th:object="${reserva}" method="post" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+                        <input type="hidden" th:field="*{id}" />
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Ocupado</label>
+                            <select th:field="*{ocupado}" class="mt-1 block w-full border border-[#138fcb] rounded-md p-2"
+                                required>
+                                <option value="1">Sí</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Nombre reservista</label>
+                            <input type="text" th:field="*{name}" maxlength="50"
+                                class="mt-1 block w-full border border-[#138fcb] rounded-md p-2" placeholder="Nombre" required />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Cancha</label>
+                            <select th:field="*{cancha}" class="mt-1 block w-full border border-[#138fcb] rounded-md p-2"
+                                required>
+                                <option th:each="canchaOption : ${T(com.example.urbify.models.ReservaCancha.Cancha).values()}"
+                                    th:value="${canchaOption}" th:text="${canchaOption.name()}"></option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Hora Inicio</label>
+                            <input type="datetime-local" id="createdAt" th:field="*{createdAt}" name="fecha"
+                                class="mt-1 block w-full border border-[#138fcb] rounded-md p-2"  required />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Hora de fin</label>
+                            <input type="datetime-local" id="updatedAt" th:field="*{updatedAt}"
+                                class="mt-1 block w-full border border-[#138fcb] rounded-md p-2" readonly />
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700">Apartamento</label>
+                            <input type="number" name="apartamentoId" list="apartamentos-list" placeholder="Buscar apartamento"
+                                th:value="${reserva.apartamento != null ? reserva.apartamento.id : ''}"
+                                class="mt-1 block w-full border border-[#138fcb] rounded-md p-2" required />
+                            <datalist id="apartamentos-list">
+                                <option th:each="apt : ${apartamentos}" th:value="${apt.id}"
+                                    th:text="${apt.apartamento} + ', Torre' + ${apt.torre}"></option>
+                            </datalist>
+                        </div>
+
+                        <div class="col-span-1 md:col-span-2 text-center pt-4">
+                            <button type="submit"
+                                class="bg-[#138fcb] text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition">
+                                <span th:text="${reserva?.id != null ? 'Actualizar Reserva' : 'Guardar Reserva'}">Guardar
+                                    Reserva</span>
+                            </button>
+                            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                            
+                            <a th:href="@{/vigilant/reservas}" 
+                               class="ml-4 bg-sky-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition">
+                                Limpiar Formulario
+                            </a>
+                        </div>
+                    </form>
+                </div>
+
+                <div
+                    class="md:w-1/2 bg-white shadow-md rounded-lg p-6 overflow-x-auto overflow-y-auto border-4 border-[#138fcb] text-center">
+                    <h2 class="text-xl font-semibold mb-4 text-[#138fcb]">Listado de Reservas</h2>
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-blue-300">
+                            <tr>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-black">Nombre</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-black">Cancha</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-black">Inicio</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-black">Fin</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-black">Apartamento</th>
+                                <th class="px-4 py-2 text-left text-sm font-medium text-black">Acciones</th>
+
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200 bg-blue-100"  
+                            th:each="reserva : ${reservas}">
+                            <tr>
+                                <td class="px-4 py-2" th:text="${reserva.name}"></td>
+                                <td class="px-4 py-2" th:text="${reserva.cancha}"></td>
+                                <td class="px-4 py-2" th:text="${#dates.format(reserva.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                                <td class="px-4 py-2" th:text="${#dates.format(reserva.updatedAt, 'dd/MM/yyyy HH:mm')}"></td>
+                                <td class="px-4 py-2" th:text="${reserva.apartamento.apartamento}"></td>
+                                <td class="px-4 py-2 flex gap-2">
+                                    <a th:href="@{/vigilant/reservas/edit/{id}(id=${reserva.id})}"
+                                        class="bg-[#138fcb] hover:bg-blue-600 text-white font-bold py-1 px-3 rounded-md transition duration-300">
+                                        <i class="hgi hgi-stroke hgi-pencil-edit-02"></i>
+                                    </a>
+                                    <form th:action="@{/vigilant/reservas/delete/{id}(id=${reserva.id})}" method="post">
+                                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                                        <button type="submit"
+                                            class="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-md transition duration-300"
+                                            onclick="return confirm('¿Estás seguro de que quieres eliminar esta reserva?');">
+                                            <i class="hgi hgi-stroke hgi-alert-02"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+        <script>
+            const createdAtInput = document.getElementById('createdAt');
+            const updatedAtInput = document.getElementById('updatedAt');
+
+            const now = new Date();
+            const formatted = now.toISOString().slice(0,16);
+            document.getElementById('createdAt').value = formatted;
+            document.getElementById('createdAt').min = formatted;
+            // Función para formatear una fecha al formato de input datetime-local
+            function formatDateTimeLocal(date) {
+                if (!date) return '';
+                const year = date.getFullYear();
+                const month = String(date.getMonth() + 1).padStart(2, '0');
+                const day = String(date.getDate()).padStart(2, '0');
+                const hours = String(date.getHours()).padStart(2, '0');
+                const minutes = String(date.getMinutes()).padStart(2, '0');
+                return `${year}-${month}-${day}T${hours}:${minutes}`;
+            }
+
+            // Listener para actualizar 'updatedAt' cuando 'createdAt' cambia
+            createdAtInput.addEventListener('input', () => {
+                if (!createdAtInput.value) {
+                    updatedAtInput.value = '';
+                    return;
+                }
+                const createdDate = new Date(createdAtInput.value);
+                createdDate.setHours(createdDate.getHours() + 1); // Suma 1 hora
+
+                updatedAtInput.value = formatDateTimeLocal(createdDate);
+            });
+
+            window.addEventListener('load', () => {
+                if (updatedAtInput.value) {
+                    const existingDate = new Date(updatedAtInput.value);
+                    updatedAtInput.value = formatDateTimeLocal(existingDate);
+                }
+
+                if (createdAtInput.value && !updatedAtInput.value) {
+                    const createdDate = new Date(createdAtInput.value);
+                    createdDate.setHours(createdDate.getHours() + 1);
+                    updatedAtInput.value = formatDateTimeLocal(createdDate);
+                }
+            });
+
+        </script>
+    </main>
+</body>
+
+</html>

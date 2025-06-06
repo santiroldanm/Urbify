@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urbify | Apartamentos</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+    <link rel="shortcut icon" href="/img/logo.png" type="image/x-icon" />
+</head>
+
+<body class="bg-[url(/img/fondo4.jpg)] bg-cover bg-no-repeat bg-center bg-fixed font-sans">
+    <!-- Sidebar fijo -->
+    <aside
+        class="fixed top-0 left-0 w-64 h-screen bg-[#138fcb] text-white flex flex-col justify-between shadow-lg overflow-y-auto z-50">
+        <div>
+            <div class="p-6 flex flex-col items-center text-center">
+                <img class="w-24 h-24 rounded-full border-4 border-white bg-white" th:src="@{/img/admin.png}"
+                    alt="Perfil Admin" />
+                <h2 class="mt-4 text-xl font-bold" th:text="${admin.firstName + ' ' + admin.lastName}">Nombre Admin</h2>
+                <p class="text-sm text-white/80" th:text="${admin.email}">admin@email.com</p>
+            </div>
+            <nav class="flex flex-col gap-2 px-6 text-lg">
+                <a th:href="@{/admins/action}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-home-06"></i> Inicio
+                </a>
+                <a th:href="@{/admins/vigilants}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-user"></i> Registrar Vigilantes
+                </a>
+                <a th:href="@{/payments}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-eye"></i> Ver Pagos
+                </a>
+                <a th:href="@{/reserves/list}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-calendar-03 text-xl"></i> Salón Social
+                </a>
+                <a th:href="@{/renters/list}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-house-01 text-xl"></i> Inquilinos
+                </a>
+                <a th:href="@{/admins/reports}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-chart"></i> Reportes
+                </a>
+            </nav>
+        </div>
+        <div class="px-6 py-4">
+            <a th:href="@{/logout}"
+                class="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-2 rounded w-full text-center">
+                <i class="hgi hgi-stroke hgi-logout-05"></i> Cerrar Sesión
+            </a>
+        </div>
+    </aside>
+
+    <!-- Contenido principal -->
+    <main class="ml-64 p-8 min-h-screen">
+
+        <div class="flex justify-between items-center mb-8">
+            <a th:href="@{/admins/action}"
+                class="inline-flex items-center px-4 py-2 bg-[#138fcb] hover:bg-blue-700 text-white rounded-lg transition duration-300 shadow-md">
+                <i class="hgi hgi-stroke hgi-arrow-left-02 mr-2"></i> Volver
+            </a>
+            <img class="h-20" th:src="@{/img/logo.png}" alt="Logo Urbify" />
+        </div>
+
+
+        <!-- Estadísticas resumen -->
+        <h1 class="text-center text-4xl font-bold text-[#138fcb] my-6">Registro de Pagos</h1>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+            <div class="bg-white border-4 border-[#138fcb] p-4 rounded-xl shadow-md">
+                <p class="text-sm text-gray-500">Total Recaudado</p>
+                <p class="text-2xl font-bold text-green-600"
+                    th:text="'$' + ${#numbers.formatInteger(totalRecaudado, 0, 'POINT')}">0</p>
+            </div>
+            <div class="bg-white border-4 border-[#138fcb] p-4 rounded-xl shadow-md">
+                <p class="text-sm text-gray-500">Deuda Total</p>
+                <p class="text-2xl font-bold text-red-500"
+                    th:text="'$' + ${#numbers.formatInteger(deudaTotal, 0, 'POINT')}">0</p>
+            </div>
+            <div class="bg-white border-4 border-[#138fcb] p-4 rounded-xl shadow-md">
+                <p class="text-sm text-gray-500">Aptos Morosos</p>
+                <p class="text-2xl font-bold text-red-700" th:text="${aptosMorosos}">0</p>
+            </div>
+            <div class="bg-white border-4 border-[#138fcb] p-4 rounded-xl shadow-md">
+                <p class="text-sm text-gray-500">Pagos del Mes</p>
+                <p class="text-2xl font-bold text-blue-700" th:text="${pagosDelMes}">0</p>
+            </div>
+        </div>
+
+        <form th:action="@{/payments}" method="get"
+            class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+
+            <!-- Selects -->
+            <div class="flex gap-4 w-full md:w-auto">
+
+                <select name="mes" class="px-4 py-2 rounded-xl border border-[#138fcb] w-full">
+                    <option value="" th:selected="${mes == null or mes == ''}">Todos los meses</option>
+                    <option value="Abril" th:selected="${mes == 'Abril'}">Abril 2025</option>
+                    <option value="Mayo" th:selected="${mes == 'Mayo'}">Mayo 2025</option>
+                    <option value="Junio" th:selected="${mes == 'Junio'}">Junio 2025</option>
+                </select>
+
+                <select name="estado" class="px-4 py-2 rounded-xl border border-[#138fcb] w-full">
+                    <option value="" th:selected="${estado == null or estado == ''}">Todos los estados</option>
+                    <option value="Pagado" th:selected="${estado == 'Pagado'}">Pagado</option>
+                    <option value="Moroso" th:selected="${estado == 'Moroso'}">Moroso</option>
+                    <option value="Pendiente" th:selected="${estado == 'Pendiente'}">Pendiente</option>
+                </select>
+
+                <select name="torre" class="px-4 py-2 rounded-xl border border-[#138fcb] w-full">
+                    <option value="" th:selected="${torre == null or torre == ''}">Todas las torres</option>
+                    <option value="1" th:selected="${torre == 1 or torre == '1'}">Torre 1</option>
+                    <option value="2" th:selected="${torre == 2 or torre == '2'}">Torre 2</option>
+                    <option value="3" th:selected="${torre == 2 or torre == '2'}">Torre 3</option>
+                </select>
+            </div>
+
+            <!-- Campo de búsqueda -->
+            <div class="relative w-full md:w-1/3">
+                <input type="text" name="keyword" th:value="${keyword}"
+                    class="px-4 py-2 rounded-xl border border-[#138fcb] w-full pl-10"
+                    placeholder="Buscar apto o propietario" />
+            </div>
+
+            <button type="submit"
+                class="inline-block px-6 py-2 bg-[#138fcb] text-white font-semibold rounded-xl shadow hover:bg-blue-700 transition">
+                <i class="hgi hgi-stroke hgi-search-01 text-sm"></i>
+            </button>
+        </form>
+
+
+
+        <!-- Tabla de apartamentos -->
+        <div class="overflow-x-auto bg-white border-4 border-[#138fcb] rounded-xl shadow-md">
+            <table class="min-w-full divide-y divide-gray-200 text-sm">
+                <thead class="bg-[#f0f8ff] text-[#138fcb]">
+                    <tr>
+                        <th class="px-6 py-3 text-left font-bold">Apartamento</th>
+                        <th class="px-6 py-3 text-left font-bold">Torre</th>
+                        <th class="px-6 py-3 text-left font-bold">Propietario</th>
+                        <th class="px-6 py-3 text-left font-bold">Mes</th>
+                        <th class="px-6 py-3 text-left font-bold">Estado</th>
+                        <th class="px-6 py-3 text-left font-bold">Valor</th>
+                        <th class="px-6 py-3 text-left font-bold">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                    <tr th:each="pago : ${pagosPage.content}" class="hover:bg-gray-50">
+                        <td class="px-6 py-4 font-semibold text-gray-800" th:text="${pago.apartamento.apartamento}">Apto
+                            101</td>
+                        <td class="px-6 py-4 font-semibold text-gray-800" th:text="${pago.apartamento.torre}">Apto
+                            101</td>
+                        <td class="px-6 py-4"
+                            th:text="${pago.apartamento.propietario != null ? pago.apartamento.propietario.firstName + ' ' + pago.apartamento.propietario.lastName : 'Sin asignar'}">
+                            Nombre Propietario
+                        </td>
+                        <td class="px-6 py-4" th:text="${pago.mes}">Abril 2025</td>
+                        <td class="px-6 py-4 font-medium"
+                            th:classappend="${pago.estado.toUpperCase() == 'PAGADO' ? ' text-green-600' : (pago.estado.toUpperCase() == 'MOROSO' ? ' text-red-600' : ' text-yellow-600')}"
+                            th:text="${pago.estado}">
+                            Pagado
+                        </td>
+                        <td class="px-6 py-4"
+                            th:text="'$' + ${#numbers.formatDecimal(pago.valor, 0, 'COMMA', 2, 'POINT')}">$380.000</td>
+                        <td class="px-6 py-4">
+                            <a th:if="${pago.estado.toUpperCase() == 'PAGADO'}"
+                                th:href="@{/payments/{id}/recibo(id=${pago.id})}" target="_blank" title="Ver factura">
+                                <i class="text-2xl hgi hgi-stroke hgi-bookmark-check-02 text-green-600"></i>
+                            </a>
+                            <span
+                                th:if="${pago.estado.toUpperCase() == 'PENDIENTE' or pago.estado.toUpperCase() == 'MOROSO'}">
+                                <button type="button" class="cursor-click btn btn-info"
+                                    th:attr="data-email=${pago.apartamento.propietario.email}"
+                                    onclick="mostrarCorreo(this)">
+                                    <i class="text-2xl hgi hgi-stroke hgi-alert-02 text-amber-500 mr-2"></i>
+                                </button>
+
+                                <a th:href="@{/payments/edit/{id}(id=${pago.id})}">
+                                    <i class="text-2xl hgi hgi-stroke hgi-pencil-edit-02 text-blue-600"></i>
+                                </a>
+                            </span>
+
+                        </td>
+                    </tr>
+
+                </tbody>
+            </table>
+
+            <!-- Paginación visual -->
+            <div class="flex justify-between items-center p-4 bg-white rounded-b-xl border-t border-gray-200 text-sm">
+                <span class="text-gray-600">
+                    Mostrando página <span th:text="${currentPage + 1}"></span> de <span th:text="${totalPages}"></span>
+                </span>
+                <div class="flex items-center gap-1">
+                    <a th:if="${currentPage > 0}"
+                        th:href="@{/payments(page=${currentPage - 1}, keyword=${keyword}, mes=${mes}, estado=${estado}, torre=${torre})}"
+                        class="px-3 py-1 rounded-lg border border-gray-300 text-white bg-[#138fcb] hover:bg-blue-700">Anterior</a>
+
+                    <span th:each="i : ${#numbers.sequence(startPage, endPage)}"
+                        th:classappend="${i == currentPage} ? 'bg-[#138fcb] text-white font-bold' : 'border border-gray-300 text-gray-600 hover:bg-gray-100'"
+                        class="px-3 py-1 rounded-lg">
+                        <a th:href="@{/payments(page=${i}, keyword=${keyword}, mes=${mes}, estado=${estado}, torre=${torre})}"
+                            th:text="${i + 1}"></a>
+                    </span>
+
+                    <a th:if="${currentPage < totalPages - 1}"
+                        th:href="@{/payments(page=${currentPage + 1}, keyword=${keyword}, mes=${mes}, estado=${estado}, torre=${torre})}"
+                        class="px-3 py-1 rounded-lg border border-gray-300 text-white bg-[#138fcb] hover:bg-blue-700">Siguiente</a>
+                </div>
+            </div>
+        </div>
+
+        <div id="modalDelete"
+            class="hidden bg-slate-800 bg-opacity-50 flex justify-center items-center fixed top-0 right-0 bottom-0 left-0">
+            <div class="bg-white px-16 py-14 rounded-md text-center">
+                <h1 class="text-xl mb-4 font-bold text-slate-500">¿Eliminar pago?</h1>
+                <button id="btnCancel" class="bg-red-500 px-4 py-2 rounded-md text-md text-white">Cancel</button>
+                <button class="bg-indigo-500 px-7 py-2 ml-2 rounded-md text-md text-white font-semibold">Ok</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function mostrarCorreo(button) {
+            const email = button.getAttribute('data-email');
+            alert(`Envía un correo electrónico a: ${email}`);
+        }
+    </script>
+</body>
+
+</html>

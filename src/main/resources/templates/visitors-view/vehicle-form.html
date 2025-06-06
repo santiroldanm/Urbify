@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Urbify | Registro Vehículo</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+  <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/x-icon" />
+</head>
+
+<body>
+  <main class="ml-64 p-8 bg-[url('/img/fondo4.jpg')] bg-cover bg-no-repeat bg-center bg-fixed min-h-screen">
+    <!-- Sidebar fijo -->
+    <aside
+      class="fixed top-0 left-0 w-64 h-screen bg-[#138fcb] text-white flex flex-col justify-between shadow-lg overflow-y-auto z-50">
+      <div>
+        <div class="p-6 flex flex-col items-center text-center">
+          <img class="w-24 h-24 rounded-full border-4 border-white bg-white" th:src="@{/img/vigilante.png}"
+            alt="Imagen de Perfil Vigilante" />
+          <h2 class="mt-4 text-xl font-bold" th:text="${vigilant.firstName + ' ' + vigilant.lastName}">
+            Nombre Vigilante
+          </h2>
+          <p class="text-sm text-white/80" th:text="${vigilant.email}">
+            vigilant@email.com
+          </p>
+        </div>
+        <nav class="px-6 flex flex-col gap-2 text-md">
+          <a th:href="@{/vigilant/action}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-home-06 text-white"></i>
+            <span class="text-white font-semibold">Inicio</span>
+          </a>
+          <a th:href="@{/vigilant/visitante}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-user-circle text-white"></i>
+            <span class="text-white font-semibold">Persona</span>
+          </a>
+          <a th:href="@{/vigilant/vehicles}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-car-02 text-white"></i>
+            <span class="text-white font-semibold">Vehiculo</span>
+          </a>
+          <a th:href="@{/vigilant/parqueadero}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-car-parking-02 text-white"></i>
+            <span class="text-white font-semibold">Parqueadero</span>
+          </a>
+          <a th:href="@{/vigilant/reservas}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-calendar-03 text-white"></i>
+            <span class="text-white font-semibold">Reservas</span>
+          </a>
+          <a th:href="@{/vigilant/reporte-visitantes}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-complaint text-white"></i>
+            <span class="text-white font-semibold">Reportes</span>
+          </a>
+          <a th:href="@{/Correspondencias/list}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-package-delivered text-white"></i>
+            <span class="text-white font-semibold">Correspondencias</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="px-6 py-4">
+        <form th:action="@{/logout}" method="post" class="w-full">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+          <button type="submit"
+            class="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-2 rounded w-full text-center">
+            <i class="hgi hgi-stroke hgi-logout-05"></i> Cerrar Sesión
+          </button>
+        </form>
+      </div>
+    </aside>
+
+    <!-- Contenido principal -->
+    <div class="flex flex-col items-center text-center w-full">
+      <div class="flex justify-between items-center w-full max-w-6xl mb-8">
+        <a th:href="@{/vigilant/vehicles}"
+          class="inline-flex items-center px-4 py-2 bg-[#138fcb] hover:bg-blue-700 text-white rounded-lg transition duration-300 shadow-md">
+          <i class="hgi hgi-stroke hgi-arrow-left-02 mr-2"></i> Volver
+        </a>
+        <img class="h-20" src="/img/logo.png" alt="Logo Urbify" />
+      </div>
+      <div class="my-4 text-center">
+        <h1 class="text-4xl text-[#138fcb] font-bold">
+          NUEVO REGISTRO DE VEHÍCULO
+        </h1>
+      </div>
+
+      <div th:if="${error}" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded text-center">
+        <span th:text="${error}"></span>
+      </div>
+
+      <!-- FORMULARIO -->
+      <div class="flex items-center justify-center">
+        <div class="mx-auto w-full max-w-[550px]">
+          <div th:if="${error}" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4"
+            role="alert">
+            <strong class="font-bold">¡Error!</strong>
+            <span class="block sm:inline" th:text="${error}">Mensaje de error aquí</span>
+          </div>
+          <form th:action="@{/vigilant/vehicles}" th:object="${vehicle}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+            <input type="hidden" th:field="*{id}" />
+            <input type="hidden" th:field="*{createdAt}"
+              th:value="${#dates.format(vehicle.createdAt, 'yyyy-MM-dd HH:mm:ss.S')}" />
+
+            <!-- Nombre y Apellido -->
+            <div class="flex flex-wrap -mx-3">
+              <div class="w-full px-3 sm:w-1/2">
+                <div class="mb-5">
+                  <label for="first_name" class="block mb-3 text-base font-medium">
+                    Nombre
+                  </label>
+                  <input type="text" th:field="*{firstName}" id="first_name" placeholder="Nombre"
+                    class="w-full rounded-2xl border-2 border-[#138fcb] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:shadow-md"
+                    required />
+                </div>
+              </div>
+              <div class="w-full px-3 sm:w-1/2">
+                <div class="mb-5">
+                  <label for="last_name" class="block mb-3 text-base font-medium">
+                    Apellido
+                  </label>
+                  <input type="text" th:field="*{lastName}" id="last_name" placeholder="Apellido"
+                    class="w-full rounded-2xl border-2 border-[#138fcb] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:shadow-md"
+                    required />
+                </div>
+              </div>
+            </div>
+
+            <!-- Identificación y Apartamento -->
+            <div class="flex flex-wrap -mx-3">
+              <div class="w-full px-3 sm:w-1/2">
+                <div class="mb-5">
+                  <label for="identification" class="block mb-3 text-base font-medium">
+                    Identificación
+                  </label>
+                  <input type="text" th:field="*{identification}" id="identification" placeholder="Identificación"
+                    class="w-full rounded-2xl border-2 border-[#138fcb] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:shadow-md"
+                    required />
+                </div>
+              </div>
+              <div class="w-full px-3 sm:w-1/2">
+                <div class="mb-5">
+                  <label for="apartamento" class="block mb-3 text-base font-medium">Apartamento</label>
+                  <select th:field="*{apartamento}" id="apartamento"
+                    class="w-full rounded-2xl border-2 border-[#138fcb] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:shadow-md"
+                    required>
+                    <option value="" required selected>
+                      Seleccione apartamento
+                    </option>
+                    <option th:each="apto : ${apartamentos}" th:value="${apto.id}"
+                      th:text="${apto.apartamento}+ ', Torre'+ ${apto.torre}">
+                      Apartamento
+                    </option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Placa y Tipo de Propietario -->
+            <div class="flex flex-wrap -mx-3">
+              <div class="w-full px-3 sm:w-1/2">
+                <div class="mb-5">
+                  <label for="plate" class="block mb-3 text-base font-medium">
+                    Placa
+                  </label>
+                  <input type="text" th:field="*{plate}" id="plate" placeholder="Placa"
+                    class="w-full rounded-2xl border-2 border-[#138fcb] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:shadow-md"
+                    required />
+                </div>
+              </div>
+
+              <div class="w-full px-3 sm:w-1/2">
+                <div class="mb-5">
+                  <label for="tipo" class="block mb-3 text-base font-medium">
+                    Tipo de Propietario
+                  </label>
+                  <select th:field="*{tipo}" id="tipo"
+                    class="w-full rounded-2xl border-2 border-[#138fcb] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:shadow-md"
+                    required>
+                    <option value="">Seleccione...</option>
+                    <option value="Propietario">Propietario</option>
+                    <option value="Visitante">Visitante</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tipo de Vehículo -->
+            <div class="mb-5">
+              <label for="type" class="block mb-3 text-base font-medium">
+                Tipo de Vehículo
+              </label>
+              <select th:field="*{type}" id="type"
+                class="w-full rounded-2xl border-2 border-[#138fcb] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:shadow-md"
+                required>
+                <option value="">Seleccione...</option>
+                <option value="Carro">Carro</option>
+                <option value="Moto">Moto</option>
+              </select>
+            </div>
+            <div>
+              <label for="active" class="block text-lg font-medium text-gray-700 mb-1">Ocupado:</label>
+              <select id="active" th:field="*{active}"
+                class="w-full rounded-2xl border-2 border-[#138fcb] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:shadow-md">
+                <option value="false">No</option>
+                <option value="true">Sí</option>
+              </select>
+            </div>
+            <!-- Botón de envío -->
+            <div class="flex justify-center mt-8">
+              <button type="submit"
+                class="hover:shadow-form rounded-2xl transition duration-200 bg-[#138fcb] hover:bg-blue-600 py-3 px-8 text-center text-xl font-semibold text-white outline-none">
+                <i class="pr-2 text-xl hgi hgi-stroke hgi-car-04"></i>
+                Registrar Vehículo
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+
+      <div class="pb-10"></div>
+    </div>
+  </main>
+</body>
+
+</html>

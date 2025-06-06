@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Registrar Reserva</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/x-icon" />
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+    <!-- Sidebar fijo -->
+    <aside
+        class="fixed top-0 left-0 w-64 h-screen bg-[#138fcb] text-white flex flex-col justify-between shadow-lg overflow-y-auto z-50">
+        <div>
+            <div class="p-6 flex flex-col items-center text-center">
+                <img class="w-24 h-24 rounded-full border-4 border-white bg-white" th:src="@{/img/admin.png}"
+                    alt="Perfil Admin" />
+                <h2 class="mt-4 text-xl font-bold" th:text="${admin.firstName + ' ' + admin.lastName}">Nombre Admin</h2>
+                <p class="text-sm text-white/80" th:text="${admin.email}">admin@email.com</p>
+            </div>
+            <nav class="flex flex-col gap-2 px-6 text-lg">
+                <a th:href="@{/admins/action}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-home-06"></i> Inicio
+                </a>
+                <a th:href="@{/admins/vigilants}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-user"></i> Registrar Vigilantes
+                </a>
+                <a th:href="@{/payments}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-eye"></i> Ver Pagos
+                </a>
+                <a th:href="@{/reserves/list}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-calendar-03 text-xl"></i> Salón Social
+                </a>
+                <a th:href="@{/renters/list}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-house-01 text-xl"></i> Inquilinos
+                </a>
+                <a th:href="@{/admins/reports}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-chart"></i> Reportes
+                </a>
+            </nav>
+        </div>
+        <div class="px-6 py-4">
+            <a th:href="@{/logout}"
+                class="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-2 rounded w-full text-center">
+                <i class="hgi hgi-stroke hgi-logout-05"></i> Cerrar Sesión
+            </a>
+        </div>
+    </aside>
+
+    <main class="ml-64 p-10 min-h-screen bg-[url(/img/fondo4.jpg)] bg-cover bg-no-repeat bg-center bg-fixed">
+        <div class="flex justify-between items-center mb-10">
+            <a th:href="@{/reserves/list}"
+                class="inline-flex items-center px-4 py-2 bg-[#138fcb] hover:bg-blue-700 text-white rounded-lg transition duration-300 shadow-md">
+                <i class="hgi hgi-stroke hgi-arrow-left-02 mr-2"></i> Volver
+            </a>
+            <img class="h-20" th:src="@{/img/logo.png}" alt="Logo Urbify" />
+        </div>
+
+        <div class="text-center mb-10">
+            <h1 class="text-4xl font-bold text-[#138fcb]">Registrar Reserva</h1>
+        </div>
+
+        <!-- Formulario -->
+        <div class="flex justify-center">
+            <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+                <div th:if="${error}"
+                    class="mb-4 text-red-600 font-semibold bg-red-100 border border-red-300 p-3 rounded-xl">
+                    <p th:text="${error}">Mensaje de error</p>
+                </div>
+                <form th:action="@{/reserves/save}" th:object="${reserva}" method="post" class="space-y-6">
+                    <input type="hidden" th:field="*{id}" />
+
+                    <div>
+                        <label class="block mb-1 font-medium">Tipo de Espacio</label>
+                        <input type="text" th:field="*{tipoEspacio}" readonly required
+                            class="w-full rounded-2xl border-2 border-[#138fcb] py-3 px-5 text-gray-700 focus:shadow-md outline-none" />
+                    </div>
+
+                    <div>
+                        <label class="block mb-1 font-medium">Apartamento</label>
+                        <select th:field="*{apartamento}" required
+                            class="w-full rounded-2xl border-2 border-[#138fcb] py-3 px-5 text-gray-700 focus:shadow-md outline-none">
+                            <option th:each="apt : ${apartamentos}" th:value="${apt.id}"
+                                th:text="'Torre ' + ${apt.torre} + ', Apt ' + ${apt.apartamento}">
+                            </option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-1 font-medium">Fecha y Hora de Inicio</label>
+                        <input type="datetime-local" th:field="*{fechaHoraInicio}" required
+                            class="w-full rounded-2xl border-2 border-[#138fcb] py-3 px-5 text-gray-700 focus:shadow-md outline-none" />
+                    </div>
+
+                    <div>
+                        <label class="block mb-1 font-medium">Fecha y Hora de Fin</label>
+                        <input type="datetime-local" th:field="*{fechaHoraFin}" required
+                            class="w-full rounded-2xl border-2 border-[#138fcb] py-3 px-5 text-gray-700 focus:shadow-md outline-none" />
+                    </div>
+
+                    <div class="flex justify-end space-x-4">
+                        <a th:href="@{/reserves/list}" class="text-[#138fcb] hover:underline">Cancelar</a>
+                        <button type="submit"
+                            class="bg-[#138fcb] hover:bg-blue-600 transition duration-300 text-white font-bold py-3 px-8 rounded-2xl shadow-md">
+                            Guardar Reserva
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</body>
+
+</html>

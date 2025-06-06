@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Urbify | Sistema de Gestión Residencial</title>
+  <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+  <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+  <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/x-icon" />
+</head>
+
+<body>
+  <main class="ml-64 p-8 bg-[url('/img/fondo4.jpg')] bg-cover bg-no-repeat bg-center bg-fixed min-h-screen">
+    <!-- Sidebar fijo -->
+    <aside
+      class="fixed top-0 left-0 w-64 h-screen bg-[#138fcb] text-white flex flex-col justify-between shadow-lg overflow-y-auto z-50">
+      <div>
+        <div class="p-6 flex flex-col items-center text-center">
+          <img class="w-24 h-24 rounded-full border-4 border-white bg-white" th:src="@{/img/vigilante.png}"
+            alt="Imagen de Perfil Vigilante" />
+          <h2 class="mt-4 text-xl font-bold" th:text="${vigilant.firstName + ' ' + vigilant.lastName}">
+            Nombre Vigilante
+          </h2>
+          <p class="text-sm text-white/80" th:text="${vigilant.email}">
+            vigilant@email.com
+          </p>
+        </div>
+        <nav class="px-6 flex flex-col gap-2 text-md">
+          <a th:href="@{/vigilant/action}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-home-06 text-white"></i>
+            <span class="text-white font-semibold">Inicio</span>
+          </a>
+          <a th:href="@{/vigilant/visitante}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-user-circle text-white"></i>
+            <span class="text-white font-semibold">Persona</span>
+          </a>
+          <a th:href="@{/vigilant/vehicles}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-car-02 text-white"></i>
+            <span class="text-white font-semibold">Vehiculo</span>
+          </a>
+          <a th:href="@{/vigilant/parqueadero}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-car-parking-02 text-white"></i>
+            <span class="text-white font-semibold">Parqueadero</span>
+          </a>
+          <a th:href="@{/vigilant/reservas}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-calendar-03 text-white"></i>
+            <span class="text-white font-semibold">Reservas</span>
+          </a>
+          <a th:href="@{/vigilant/reporte-visitantes}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-complaint text-white"></i>
+            <span class="text-white font-semibold">Reportes</span>
+          </a>
+          <a th:href="@{/Correspondencias/list}"
+            class="flex items-center gap-3 p-3 rounded-lg hover:bg-white/20 cursor-pointer">
+            <i class="hgi hgi-stroke hgi-package-delivered text-white"></i>
+            <span class="text-white font-semibold">Correspondencias</span>
+          </a>
+        </nav>
+      </div>
+
+      <div class="px-6 py-4">
+        <form th:action="@{/logout}" method="post" class="w-full">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+          <button type="submit"
+            class="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-2 rounded w-full text-center">
+            <i class="hgi hgi-stroke hgi-logout-05"></i> Cerrar Sesión
+          </button>
+        </form>
+      </div>
+    </aside>
+
+    <!-- Contenido principal -->
+    <div class="flex flex-col items-center text-center w-full">
+      <div class="flex justify-between items-center w-full max-w-6xl mb-8">
+        <a th:href="@{/vigilant/action}"
+          class="inline-flex items-center px-4 py-2 bg-[#138fcb] hover:bg-blue-700 text-white rounded-lg transition duration-300 shadow-md">
+          <i class="hgi hgi-stroke hgi-arrow-left-02 mr-2"></i> Volver
+        </a>
+        <img class="h-20" src="/img/logo.png" alt="Logo Urbify" />
+      </div>
+      <div class="my-4 text-center">
+        <h1 class="text-4xl text-[#138fcb] font-bold">
+          REGISTRO DE VEHÍCULOS
+        </h1>
+        <div th:if="${error}" class="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded text-center">
+          <span th:text="${error}"></span>
+        </div>
+        <button th:onclick="|window.location.href='@{/vigilant/vehicles/new}'|" type="submit"
+          class="cursor-pointer transition duration-200 bg-[#138fcb] hover:bg-blue-600 text-white w-50 mt-5 py-2.5 rounded-lg text-sm font-bold text-center">
+          <i class="text-xl hgi hgi-stroke hgi-car-04 p-2"></i><span class="inline-block mr-2 text-lg">Nuevo
+            Vehículo</span>
+        </button>
+
+        <button th:onclick="|window.location.href='@{/vigilant/parqueadero}'|" type="submit"
+          class="cursor-pointer transition duration-200 bg-[#138fcb] hover:bg-blue-600 text-white w-50 mt-5 py-2.5 rounded-lg text-sm font-bold text-center">
+          <i class="hgi hgi-stroke hgi-car-parking-02 text-xl p-2"></i><span
+            class="inline-block mr-2 text-lg">Parqueadero</span>
+        </button>
+      </div>
+
+      <!-- Tabla de vehículos -->
+      <div class="px-8 overflow-y-auto rounded-md max-h-[60vh]">
+        <table class="min-w-full border-collapse table-auto">
+          <thead class="bg-[#138fcb] text-white">
+            <tr>
+              <th class="p-2 border">Nombre</th>
+              <th class="p-2 border">Identificación</th>
+              <th class="p-2 border">Apartamento</th>
+              <th class="p-2 border">Placa</th>
+              <th class="p-2 border">Tipo</th>
+              <th class="p-2 border">Tipo de Propietario</th>
+              <th class="p-2 border">Estado</th>
+              <th class="p-2 border">Tiempo</th>
+              <th class="p-2 border">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr th:each="vehicle : ${vehicles}" class="bg-white hover:bg-gray-100">
+              <td class="p-2 border" th:text="${vehicle.firstName + ' ' + vehicle.lastName}"></td>
+              <td class="p-2 border" th:text="${vehicle.identification}"></td>
+              <td class="p-2 border" th:text="${vehicle.apartamento.apartamento}"></td>
+              <td class="p-2 border" th:text="${vehicle.plate}"></td>
+              <td class="p-2 border" th:text="${vehicle.type}"></td>
+              <td class="p-2 border" th:text="${vehicle.tipo}"></td>
+              <td class="p-2 border">
+                <span th:if="${vehicle.active}" class="text-green-600">Activo</span>
+                <span th:unless="${vehicle.active}" class="text-red-600">Inactivo</span>
+              </td>
+              <td class="p-2 border" th:text="${vehicle.calculateStayDuration()}"></td>
+              <td class="p-2 border space-x-1">
+                <a th:href="@{/vigilant/vehicles/edit/{id}(id=${vehicle.id})}"
+                  class="px-1 py-2 text-white bg-blue-500 rounded hover:bg-blue-700">
+                  <i class="hgi hgi-stroke hgi-pencil-edit-02"></i>
+                </a>
+                <form th:action="@{/vigilant/vehicles/delete/{id}(id=${vehicle.id})}" method="post" class="inline">
+                  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                  <button type="submit" class="px-1 py-2 text-white bg-red-500 rounded hover:bg-red-700"
+                    onclick="return confirm('¿Eliminar vehiculo?')">
+                    <i class="hgi hgi-stroke hgi-alert-02"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+</body>
+
+</html>

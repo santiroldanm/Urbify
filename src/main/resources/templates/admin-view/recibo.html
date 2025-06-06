@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recibo de Pago</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+</head>
+
+<body
+    class="flex items-center justify-center min-h-screen bg-[url(/img/fondo4.jpg)] bg-cover bg-no-repeat bg-center bg-fixed font-sans">
+    <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md space-y-4 border-4 border-[#138fcb] relative">
+
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-2xl font-bold text-[#138fcb]">Recibo de Pago</h1>
+            <img th:src="@{/img/logo.png}" class="h-20" alt="Logo Urbify" />
+        </div>
+
+        <p>
+            <strong class="text-gray-700">Apartamento:</strong>
+            <span th:text="${pago.apartamento.apartamento}" class="text-gray-900">Apartamento</span>
+        </p>
+
+        <p>
+            <strong class="text-gray-700">Propietario:</strong>
+            <span th:text="${pago.apartamento.propietario.firstName + ' ' + pago.apartamento.propietario.lastName}"
+                class="text-gray-900">
+                Propietario
+            </span>
+        </p>
+
+        <p>
+            <strong class="text-gray-700">Mes pagado:</strong>
+            <span th:text="${pago.mes}" class="text-gray-900">Mes</span>
+        </p>
+
+        <p>
+            <strong class="text-gray-700">Valor pagado:</strong>
+            <span th:text="'$' + ${#numbers.formatDecimal(pago.valor, 0, 'COMMA', 2, 'POINT')}"
+                class="text-gray-900">Valor</span>
+        </p>
+
+        <p>
+            <strong class="text-gray-700">Fecha de pago:</strong>
+            <span th:text="${#dates.format(pago.fechaPago, 'dd MMMM yyyy')}" class="text-gray-900">Fecha</span>
+        </p>
+
+        <div class="text-center pt-4">
+            <a href="#" onclick="window.print()"
+                class="inline-block bg-blue-600 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded">Imprimir</a>
+        </div>
+    </div>
+</body>
+
+</html>

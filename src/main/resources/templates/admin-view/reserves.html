@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urbify | Reservas de Salones Sociales</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+    <link rel="stylesheet" href="https://unpkg.com/@material-tailwind/html@latest/styles/material-tailwind.css" />
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/x-icon" />
+</head>
+
+<body class="bg-gray-100 font-sans">
+
+    <!-- Sidebar fijo -->
+    <aside
+        class="fixed top-0 left-0 w-64 h-screen bg-[#138fcb] text-white flex flex-col justify-between shadow-lg overflow-y-auto z-50">
+        <div>
+            <div class="p-6 flex flex-col items-center text-center">
+                <img class="w-24 h-24 rounded-full border-4 border-white bg-white" th:src="@{/img/admin.png}"
+                    alt="Perfil Admin" />
+                <h2 class="mt-4 text-xl font-bold" th:text="${admin.firstName + ' ' + admin.lastName}">Nombre Admin</h2>
+                <p class="text-sm text-white/80" th:text="${admin.email}">admin@email.com</p>
+            </div>
+            <nav class="flex flex-col gap-2 px-6 text-lg">
+                <a th:href="@{/admins/action}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-home-06"></i> Inicio
+                </a>
+                <a th:href="@{/admins/vigilants}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-user"></i> Registrar Vigilantes
+                </a>
+                <a th:href="@{/payments}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-eye"></i> Ver Pagos
+                </a>
+                <a th:href="@{/reserves/list}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-calendar-03 text-xl"></i> Salón Social
+                </a>
+                <a th:href="@{/renters/list}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-house-01 text-xl"></i> Inquilinos
+                </a>
+                <a th:href="@{/admins/reports}" class="flex items-center gap-3 p-2 rounded hover:bg-white/10">
+                    <i class="hgi hgi-stroke hgi-chart"></i> Reportes
+                </a>
+            </nav>
+        </div>
+        <div class="px-6 py-4">
+            <a th:href="@{/logout}"
+                class="flex items-center justify-center gap-2 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-2 rounded w-full text-center">
+                <i class="hgi hgi-stroke hgi-logout-05"></i> Cerrar Sesión
+            </a>
+        </div>
+    </aside>
+
+    <!-- Contenido principal -->
+    <main class="ml-64 p-10 min-h-screen bg-[url(/img/fondo4.jpg)] bg-cover bg-fixed bg-no-repeat bg-center">
+
+        <div class="flex justify-between items-center mb-8">
+            <a th:href="@{/admins/action}"
+                class="inline-flex items-center px-4 py-2 bg-[#138fcb] hover:bg-blue-700 text-white rounded-lg transition duration-300 shadow-md">
+                <i class="hgi hgi-stroke hgi-arrow-left-02 mr-2"></i> Volver
+            </a>
+            <img class="h-20" th:src="@{/img/logo.png}" alt="Logo Urbify" />
+        </div>
+
+        <div class="text-center mb-8">
+            <h1 class="text-4xl font-bold text-[#138fcb]">Reservas de Salones Sociales</h1>
+        </div>
+
+        <!-- Cards de reservas -->
+        <div class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+
+            <!-- Card Salón Social 1 -->
+            <div
+                class="bg-white shadow-lg border-4 border-blue-500 rounded-lg max-w-sm flex flex-col transition-transform transform hover:scale-105 duration-300">
+                <img class="h-48 w-full object-cover rounded-t-lg" th:src="@{/img/Salon1.jpg}" alt="Salón Social 1">
+                </a>
+                <div class="p-5 flex flex-col flex-1">
+                    <h5 class="text-gray-900 font-bold text-2xl tracking-tight mb-2">Salón Social 1</h5>
+                    <p class="text-gray-700 mb-4">Espacio amplio y elegante, perfecto para reuniones familiares,
+                        talleres y eventos sociales con capacidad para hasta 50 personas.</p>
+                    <div class="mt-auto">
+                        <a th:href="@{/reserves/new(tipo=${'Salón Social 1'}, apartamentoId=${1})}"
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center inline-flex items-center transition duration-300">
+                            Reservar
+                            <i class="hgi hgi-stroke hgi-check ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Salón Social 2 -->
+            <div
+                class="bg-white shadow-lg border-4 border-blue-500 rounded-lg max-w-sm flex flex-col transition-transform transform hover:scale-105 duration-300">
+                <img class="h-48 w-full object-cover rounded-t-lg" th:src="@{/img/Salon2.webp}" alt="Salón Social 2">
+                </a>
+                <div class="p-5 flex flex-col flex-1">
+                    <h5 class="text-gray-900 font-bold text-2xl tracking-tight mb-2">Salón Social 2</h5>
+                    <p class="text-gray-700 mb-4">Diseñado para celebraciones más grandes como cumpleaños, aniversarios
+                        o fiestas temáticas. Cuenta con iluminación ambiental y sonido.</p>
+                    <div class="mt-auto">
+                        <a th:href="@{/reserves/new(tipo=${'Salón Social 2'}, apartamentoId=${1})}"
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center inline-flex items-center transition duration-300">
+                            Reservar
+                            <i class="hgi hgi-stroke hgi-check ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Sala Juegos -->
+            <div
+                class="bg-white shadow-lg border-4 border-blue-500 rounded-lg max-w-sm flex flex-col transition-transform transform hover:scale-105 duration-300">
+                <img class="h-48 w-full object-cover rounded-t-lg" th:src="@{/img/SalaJuegos.jpg}" alt="Canchas">
+                </a>
+                <div class="p-5 flex flex-col flex-1">
+                    <h5 class="text-gray-900 font-bold text-2xl tracking-tight mb-2">Sala de Juegos</h5>
+                    <p class="text-gray-700 mb-4">Espacio equipado con mesa de ping pong, billar y juegos de mesa, ideal
+                        para el entretenimiento de jovenes y adultos.</p>
+                    <div class="mt-auto">
+                        <a th:href="@{/reserves/new(tipo=${'Sala de Juegos'}, apartamentoId=${1})}"
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center inline-flex items-center transition duration-300">
+                            Reservar
+                            <i class="hgi hgi-stroke hgi-check ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Área Infantil -->
+            <div
+                class="bg-white shadow-lg border-4 border-blue-500 rounded-lg max-w-sm flex flex-col transition-transform transform hover:scale-105 duration-300">
+                <img class="h-48 w-full object-cover rounded-t-lg" th:src="@{/img/Infantil.jpg}" alt="Área Infantil">
+                </a>
+                <div class="p-5 flex flex-col flex-1">
+                    <h5 class="text-gray-900 font-bold text-2xl tracking-tight mb-2">Área Infantil</h5>
+                    <p class="text-gray-700 mb-4">Zona segura con juegos recreativos, columpios, resbaladeras y áreas
+                        verdes para que los niños se diviertan al aire libre.</p>
+                    <div class="mt-auto">
+                        <a th:href="@{/reserves/new(tipo=${'Área Infantil'}, apartamentoId=${1})}"
+                            class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-2 text-center inline-flex items-center transition duration-300">
+                            Reservar
+                            <i class="hgi hgi-stroke hgi-check ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Tabla de Reservas -->
+        <div class="overflow-x-auto bg-white rounded-xl shadow-lg">
+            <table class="w-full table-auto text-left">
+                <thead class="bg-[#138fcb] text-white text-lg">
+                    <tr>
+                        <th class="px-4 py-3">Nombre</th>
+                        <th class="px-4 py-3">Apartamento</th>
+                        <th class="px-4 py-3">Salón</th>
+                        <th class="px-4 py-3">Hora Inicio</th>
+                        <th class="px-4 py-3">Hora Fin</th>
+                        <th class="px-4 py-3 text-center">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="text-gray-700 text-base">
+                    <tr th:each="reserva : ${reservas}" class="hover:bg-gray-100 border-b">
+                        <td class="px-4 py-3"
+                            th:text="${reserva.apartamento.propietario.firstName} + ' ' + ${reserva.apartamento.propietario.lastName}">
+                            Descripción</td>
+
+                        <td class="px-4 py-3"
+                            th:text="'Torre ' + ${reserva.apartamento.torre} + ' - Apto ' + ${reserva.apartamento.apartamento}">
+                            Apartamento
+                        </td>
+
+                        <td class="px-4 py-3" th:text="${reserva.tipoEspacio}">Tipo de Espacio</td>
+
+                        <td class="px-4 py-3"
+                            th:text="${#temporals.format(reserva.fechaHoraInicio, 'yyyy-MM-dd HH:mm')}">
+                            Hora Inicio
+                        </td>
+
+                        <td class="px-4 py-3" th:text="${#temporals.format(reserva.fechaHoraFin, 'yyyy-MM-dd HH:mm')}">
+                            Hora Fin
+                        </td>
+
+                        <td class="px-4 py-3 flex items-center justify-center gap-2">
+                            <a th:href="@{/reserves/edit/{id}(id=${reserva.id})}"
+                                class="bg-blue-500 hover:bg-blue-700 text-white p-2 rounded-lg transition">
+                                <i class="hgi hgi-stroke hgi-pencil-edit-02"></i>
+                            </a>
+
+                            <form th:action="@{/reserves/delete}" method="post"
+                                onsubmit="return confirm('¿Eliminar reserva?')">
+                                <input type="hidden" name="id" th:value="${reserva.id}" />
+                                <button type="submit"
+                                    class="bg-red-500 hover:bg-red-700 text-white p-2 rounded-lg transition">
+                                    <i class="hgi hgi-stroke hgi-alert-02"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+
+
+            </table>
+        </div>
+    </main>
+</body>
+
+</html>

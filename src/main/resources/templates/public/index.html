@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Urbify | Sistema de Gestión Residencial</title>
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="https://cdn.hugeicons.com/font/hgi-stroke-rounded.css" />
+    <link rel="shortcut icon" th:href="@{/img/logo.png}" type="image/x-icon">
+</head>
+<body class="p-0 m-0">
+<div th:style="|background-image: url('@{/img/fondo4.jpg}');|" class="bg-cover bg-no-repeat bg-center bg-fixed">
+    <div class="relative lg:px-8">
+        <div class="h-screen max-w-2xl py-6 mx-auto flex flex-col items-center justify-center">
+            <div class="mb-4">
+                <img th:src="@{/img/logo.png}" alt="Logo de Urbify" class="h-48">
+            </div>
+            <div class="text-center">
+                <h2 class="text-5xl font-extrabold text-gray-900 sm:text-4xl"> 
+                    Bienvenido a <span class="text-[#138fcb]">Urbify</span> <br>
+                    El Sistema <span class="text-[#138fcb]">#1 en Gestión Residencial</span>
+                </h2>
+                <p class="mt-8 text-lg font-medium text-gray-800 sm:text-2xl"> 
+                    ¿Cuál es tu rol?
+                </p>
+                <div class="flex items-center justify-center mt-8 gap-x-10">
+                    <a th:href="@{/public/login}"
+                       class="py-6 px-12 text-3xl font-bold text-white transition duration-200 bg-[#138fcb] shadow-lg cursor-pointer min-w-60 rounded-2xl hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 transform hover:scale-105">
+                        <i class="text-4xl hgi hgi-stroke hgi-prison-guard"></i> VIGILANTE
+                    </a>
+                    <a th:href="@{/public/login}"
+                       class="py-6 px-6 text-3xl font-bold text-white transition duration-200 bg-[#138fcb] shadow-lg cursor-pointer min-w-60 rounded-2xl hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 transform hover:scale-105">
+                        <i class="text-4xl hgi hgi-stroke hgi-manager"></i> ADMINISTRADOR
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
