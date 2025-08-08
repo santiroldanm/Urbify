@@ -79,3 +79,4 @@ Desarrollado por:
 - Santiago Roldán Muñoz
 - Juan Pablo Sánchez Jaramillo
 - Juan Pablo Restrepo Muñoz
+- Juan Manuel López Vélez
